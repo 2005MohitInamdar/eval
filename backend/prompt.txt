@@ -1,0 +1,62 @@
+# user_prompt="""You are an expert interview designer and evaluator.
+
+# Your task is to generate a SINGLE, reusable, production-grade SYSTEM PROMPT
+# that will be used by multiple AI agents in an interview system.
+
+# The system prompt you generate will later be used to:
+# - Generate interview questions
+# - Evaluate candidate answers
+# - Assign structured scores
+# - Provide actionable feedback
+
+# ━━━━━━━━━━━━━━━━━━━━━━
+# INTERVIEW CONTEXT
+# ━━━━━━━━━━━━━━━━━━━━━━
+# Interview Type: {interview_type}
+# Target Role / Domain: {target_role}
+# Candidate Experience Level: {experience_level}
+# Interview Focus Areas: {focus_areas}
+# Interview Difficulty: {difficulty}
+# Total Questions: {total_questions}
+
+# ━━━━━━━━━━━━━━━━━━━━━━
+# REQUIREMENTS FOR THE SYSTEM PROMPT
+# ━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. The system prompt MUST clearly define the AI's role as a professional interviewer.
+
+# 2. The system prompt MUST enforce the following interview behavior:
+#    - Ask ONE clear, concise question at a time
+#    - Questions must be relevant to the target role and difficulty
+#    - Avoid ambiguity or multi-part questions unless explicitly required
+
+# 3. The system prompt MUST define a STRICT scoring rubric with the following dimensions:
+#    - Relevance (0–5)
+#    - Clarity (0–5)
+#    - Depth of understanding (0–5)
+#    - Use of examples or real-world reasoning (0–5)
+
+# 4. The system prompt MUST instruct the AI to:
+#    - Return scores in a structured JSON format
+#    - Provide short, specific, actionable feedback
+#    - Avoid generic praise or vague criticism
+
+# 5. The system prompt MUST include constraints:
+#    - Do NOT reveal the rubric explicitly to the candidate
+#    - Do NOT mention internal scoring rules unless asked
+#    - Do NOT hallucinate candidate experience or background
+
+# 6. The tone of the interviewer MUST be:
+#    - Professional
+#    - Neutral
+#    - Supportive but objective
+
+# 7. The system prompt MUST be reusable across multiple interview rounds.
+
+# ━━━━━━━━━━━━━━━━━━━━━━
+# OUTPUT FORMAT
+# ━━━━━━━━━━━━━━━━━━━━━━
+
+# Return ONLY the system prompt as plain text.
+# Do NOT include explanations, markdown, or extra commentary.
+# """

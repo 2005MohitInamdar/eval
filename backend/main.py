@@ -21,24 +21,11 @@ model = ChatOpenAI(
     streaming=True
 )
 
-# model2 = ChatOpenAI(
-#     # model="nvidia/nemotron-3-nano-30b-a3b:free",
-#     model="allenai/molmo-2-8b:free",
-#     base_url="https://openrouter.ai/api/v1",
-#     api_key=os.getenv("OPENROUTER_API_KEY"),
-#     temperature=0.8,
-#     streaming=True
-# )
-
-
-
 class State(TypedDict, total=False):
     question:Annotated[str, operator.add]
     prompt:str
     error:list[str]
     count: int
-
-
 
 async def generate_prompt(state:State) -> State:
     """Generate a prompt for the interview questions"""
@@ -63,12 +50,8 @@ async def generate_prompt(state:State) -> State:
         print(error)
         return {"error" : error, "prompt": "", "count": 0}
 
-
-
-
 async def node1(state:State) -> State:
     """Generating questions for interview"""
-
 
     print("\n \n \n")
     print("STARTING QUESTION GENERATION NODE 1")
@@ -88,7 +71,6 @@ async def node1(state:State) -> State:
     except Exception as e:
         print(e)
         return {"error" : f"{e}", "question" : ""}
-    
 
 def should_continue(state:State) -> int:
     """This node checks if the count is less than 11"""
@@ -97,17 +79,14 @@ def should_continue(state:State) -> int:
         return "loop"
     else:
         return "end_loop"
-     
 
 workflow = StateGraph(State)
 workflow.add_node("generate_prompt", generate_prompt)
 workflow.add_node("node1", node1)
 
-
 workflow.add_edge(START, "generate_prompt")
 workflow.add_edge("generate_prompt", "node1")
-workflow.add_edge("node1", "END")
-
+workflow.add_edge("node1", END)
 
 workflow.add_conditional_edges(
     "node1",
@@ -117,9 +96,8 @@ workflow.add_conditional_edges(
         "end_loop":END,
     }
 )
+
 chain = workflow.compile()
-
-
 
 async def run_chain():
     final_state = {
@@ -128,23 +106,21 @@ async def run_chain():
         "prompt" : ""
     }
 
-
     async for state_update in chain.astream({}):
         if "generate_prompt" in state_update:
             prompt_node = state_update["generate_prompt"]
             final_prompt = prompt_node['prompt']
+            print(final_prompt)
             final_state["prompt"] = "".join([final_state["prompt"], final_prompt])
-            
 
         if "node1" in state_update:
             question_node = state_update["node1"]
             final_question=question_node["question"]
+            print(final_question)
             final_state["question"].append(final_question)
-    
 
     final_state_prompt = json.dumps(final_state, indent=4)
     print(final_state_prompt)
     return final_state
-
 
 asyncio.run(run_chain())

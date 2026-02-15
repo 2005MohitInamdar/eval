@@ -7,9 +7,8 @@ import operator
 from typing import Annotated
 import asyncio
 import os
-import json
+import logging
 load_dotenv()
-
 
 user_prompt="Generate a prompt to feed to an llm for generating one soft skill only question no options or further any hints or help"
 

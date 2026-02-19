@@ -8,6 +8,9 @@
 
 # Node
 frontend/eval/node_modules
+frontend/eval/.angular/
+frontend/eval/dist/
+
 npm-debug.log
 yarn-error.log
 

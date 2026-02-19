@@ -2,26 +2,30 @@ from dotenv import load_dotenv
 import os
 import asyncio
 from langchain_openai import ChatOpenAI
+import logging
+
 load_dotenv()
-openrouter_api_key = os.getenv("OPENROUTER_API_KEY")
-print("Initiallizing project!")
-user_input=input("Enter a prompt: ")
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 model = ChatOpenAI(
     model="liquid/lfm-2.5-1.2b-thinking:free",
-    api_key=openrouter_api_key,
+    api_key=os.getenv("OPENROUTER_API_KEY"),
     temperature=0.8,
     base_url="https://openrouter.ai/api/v1",
     streaming=True
 )
-try:
-    async def resume_evaluation():
+
+async def resume_evaluation(user_input):
+    "Generator function streams tokens from AI model"
+    try:
         async for token in model.astream(user_input):
-            print(token.content, flush=True, end="")
-except Exception as e:
-    print(e)
-except KeyboardInterrupt:
-    print("Goodbye!")
+            content = token.content
+            yield f"data: {content}\n\n"
+    except Exception as e:
+        logging.error(f"Stream interrupted by error", exc_info=True)
+        yield f"Server Error: {str(e)}"
     
-if __name__ =="__main__":
-    asyncio.run(resume_evaluation())

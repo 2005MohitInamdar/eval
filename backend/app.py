@@ -1,3 +1,4 @@
+# THIS IS THE MAIN GENERATOR FOR LANGGRAPH
 from langgraph.graph import StateGraph, START, END
 from langchain_openai import ChatOpenAI
 from openai import RateLimitError
@@ -8,9 +9,10 @@ from typing import Annotated
 import asyncio
 import os
 import logging
+from typing import List
 load_dotenv()
 
-user_prompt="Generate a prompt to feed to an llm for generating one soft skill only question no options or further any hints or help"
+# user_prompt="Generate a prompt to feed to an llm for generating one soft skill only question no options or further any hints or help"
 
 model = ChatOpenAI(
     model="liquid/lfm-2.5-1.2b-thinking:free",
@@ -21,7 +23,8 @@ model = ChatOpenAI(
 )
 
 class State(TypedDict, total=False):
-    question:Annotated[list[str], operator.add]
+    frontend_prompt: str
+    question:Annotated[List[str], operator.add]
     prompt:str
     error:list[str]
     count: int
@@ -33,6 +36,7 @@ async def generate_prompt(state:State) -> State:
     print("\n \n \n")
     
     error=""
+    user_prompt = state.get("frontend_prompt")
     try:
         response = await model.ainvoke(user_prompt)
         return {"prompt" : response.content, "count": 0}
@@ -82,7 +86,6 @@ workflow.add_node("node1", node1)
 
 workflow.add_edge(START, "generate_prompt")
 workflow.add_edge("generate_prompt", "node1")
-workflow.add_edge("node1", END)
 
 workflow.add_conditional_edges(
     "node1",
@@ -95,19 +98,19 @@ workflow.add_conditional_edges(
 
 chain = workflow.compile()
 
-async def run_chain():
+async def run_chain(frontend_data:str):
     final_state = {
         "question" : [],
         "error" : [],
         "prompt" : ""
     }
-
-    async for state_update in chain.astream_events({}, version="v2"):
+    async for state_update in chain.astream_events({"frontend_prompt" : frontend_data}, version="v2"):
         # print(state_update)
         kind = state_update["event"]
         if(kind == "on_chat_model_stream"):
             content = state_update['data']["chunk"].content
             if(content):
-                print(content, end="", flush=True)
+                yield f"data: {content}\n\n"
+                # print(content, end = "", flush=True)
 
-asyncio.run(run_chain())
+# asyncio.run(run_chain("Generate a prompt to feed to an llm for generating one soft skill only question no options or further any hints or help"))

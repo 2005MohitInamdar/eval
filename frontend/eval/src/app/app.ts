@@ -1,12 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { AuthUiWrapper } from './components/authentication/auth-ui-wrapper/auth-ui-wrapper';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [AuthUiWrapper],
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrls: ['./app.scss']
 })
 export class App {
-  protected readonly title = signal('eval');
 }

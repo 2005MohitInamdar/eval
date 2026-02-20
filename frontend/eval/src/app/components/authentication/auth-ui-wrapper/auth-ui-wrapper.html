@@ -1,0 +1,18 @@
+<div>
+    <div>
+        <button type="button" (click)="setPage('Login')">Login</button>
+        <button type="button" (click)="setPage('SignUp')">SignUp</button>
+    </div>
+    <div>
+        <form action="" [formGroup]="authForm" (ngSubmit)="submit()">
+            <div>
+                @if (auth_page === "SignUp" && authForm.contains("name")){
+                    <input type="text" formControlName="name" placeholder="Enter Name">
+                } 
+                <input type="email" formControlName="email" placeholder="Enter Email ID">
+                <input type="password" formControlName="password" placeholder="Enter Password">
+            </div>
+            <button type="submit">{{auth_page === 'login' ? 'Login' : 'SignUp'}}</button>
+        </form>
+    </div>
+</div>

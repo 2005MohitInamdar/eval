@@ -1,18 +1,19 @@
 <div>
-    <div>
+    <!-- <div>
         <button type="button" (click)="setPage('Login')">Login</button>
         <button type="button" (click)="setPage('SignUp')">SignUp</button>
-    </div>
+    </div> -->
     <div>
-        <form action="" [formGroup]="authForm" (ngSubmit)="submit()">
+        <form action="" [formGroup]="authService.authForm" (ngSubmit)="authService.submit()">
             <div>
-                @if (auth_page === "SignUp" && authForm.contains("name")){
+                @if (authService.auth_page === "SignUp" && authService.authForm.contains("name")){
                     <input type="text" formControlName="name" placeholder="Enter Name">
                 } 
                 <input type="email" formControlName="email" placeholder="Enter Email ID">
                 <input type="password" formControlName="password" placeholder="Enter Password">
             </div>
-            <button type="submit">{{auth_page === 'login' ? 'Login' : 'SignUp'}}</button>
+            <!-- <button type="submit">{{authService.auth_page === 'Login' ? 'Login' : 'SignUp'}}</button> -->
+             <ng-content></ng-content>
         </form>
     </div>
 </div>

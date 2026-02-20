@@ -1,8 +1,9 @@
 import { Component, signal } from '@angular/core';
-import { AuthUiWrapper } from './components/authentication/auth-ui-wrapper/auth-ui-wrapper';
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-root',
-  imports: [AuthUiWrapper],
+  standalone: true,
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })

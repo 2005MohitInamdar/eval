@@ -51,3 +51,4 @@ backend/venv/
 backend/.env
 
 
+node_backend/node_modules

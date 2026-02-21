@@ -1,19 +1,23 @@
 <div>
-    <!-- <div>
-        <button type="button" (click)="setPage('Login')">Login</button>
-        <button type="button" (click)="setPage('SignUp')">SignUp</button>
-    </div> -->
     <div>
         <form action="" [formGroup]="authService.authForm" (ngSubmit)="authService.submit()">
             <div>
+                <!-- show the name control only when current is trying to signin -->
                 @if (authService.auth_page === "SignUp" && authService.authForm.contains("name")){
                     <input type="text" formControlName="name" placeholder="Enter Name">
                 } 
+
+                <!-- signin/login with email -->
                 <input type="email" formControlName="email" placeholder="Enter Email ID">
                 <input type="password" formControlName="password" placeholder="Enter Password">
+                <ng-content></ng-content>
+                <hr>
+                
+                <!-- sign/login In with google -->
+                <p>Sign In with</p>
+                <button type="button">Google</button>
             </div>
-            <!-- <button type="submit">{{authService.auth_page === 'Login' ? 'Login' : 'SignUp'}}</button> -->
-             <ng-content></ng-content>
+
         </form>
     </div>
 </div>

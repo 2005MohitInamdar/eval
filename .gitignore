@@ -46,9 +46,15 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# python
-backend/venv/
-backend/.env
+# python fastapi backend
+fastapi_backend/venv/
+fastapi_backend/.env
+fastapi_backend/__pycache__
+fastapi_backend/test.py
+fastapi_backend/listtest.py
+fastapi_backend/check_model.py
+fastapi_backend/main.py
 
-
+# node backend
 node_backend/node_modules
+node_backend/.env

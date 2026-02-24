@@ -48,9 +48,10 @@ Thumbs.db
 
 # python fastapi backend
 fastapi_backend/venv/
-fastapi_backend/.env
 __pycache__
 fastapi_backend/test.py
 fastapi_backend/listtest.py
 fastapi_backend/check_model.py
 fastapi_backend/main.py
+
+.env

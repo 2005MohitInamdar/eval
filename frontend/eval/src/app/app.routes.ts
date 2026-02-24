@@ -5,7 +5,7 @@ import { SplashScreen } from './components/splash_screen/splash-screen/splash-sc
 import { Dashboard } from './components/interview_dashboard/dashboard/dashboard';
 export const routes: Routes = [
     {path: "", component: SplashScreen, title: "Tutorials page"},
-    {path: 'signup', component: Signup, title: "SignUp page"},
-    {path: "login", component: Login, title: "Login page"},
+    {path: 'auth/signup', component: Signup, title: "SignUp page"},
+    {path: "auth/login", component: Login, title: "Login page"},
     {path: "dashboard", component: Dashboard, title: "Interview Dashbord Page"}
 ];

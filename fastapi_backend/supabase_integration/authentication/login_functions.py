@@ -1,12 +1,11 @@
-from auth import execute_auth_action
-from auth import supabase
+from auth import execute_auth_action, supabase
 
-def login_user(login_email, login_password):
+
+def login_user(login_email:str, login_password:str):
     return execute_auth_action(
         lambda: supabase.auth.sign_in_with_password({
             "email" : login_email,
             "password": login_password
-        }) 
+        }),
+        success_msg="User Logged In Successful"
     )
-
-login_user("1970mohitinamdar@gmail.com", "1234567890")

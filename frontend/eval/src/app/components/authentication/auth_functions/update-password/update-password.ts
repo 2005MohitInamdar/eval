@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   standalone: true, 
   imports: [],
   templateUrl: './update-password.html',
-  styleUrl: './update-password.scss',
+  styleUrls: ['./update-password.scss'],
 })
 export class UpdatePassword {
 

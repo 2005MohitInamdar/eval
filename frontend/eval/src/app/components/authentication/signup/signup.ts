@@ -8,7 +8,7 @@ import { OnInit } from '@angular/core';
   standalone: true,
   imports: [AuthUiWrapper, RouterLink],
   templateUrl: './signup.html',
-  styleUrl: './signup.scss',
+  styleUrls: ['./signup.scss'],
 })
 export class Signup implements OnInit{
   authService = inject(Auth)

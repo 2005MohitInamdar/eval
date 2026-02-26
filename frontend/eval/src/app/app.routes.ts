@@ -4,7 +4,7 @@ import { Signup } from './components/authentication/signup/signup';
 import { SplashScreen } from './components/splash_screen/splash-screen/splash-screen';
 import { Dashboard } from './components/interview_dashboard/dashboard/dashboard';
 import { UpdatePassword } from './components/authentication/auth_functions/update-password/update-password'; 
-import { VerifyEmail } from './components/authentication/signup/verify-email/verify-email'; 
+import { VerifyEmail } from './components/authentication/auth_functions/verify-email/verify-email'; 
 import { ForgotPassword } from './components/authentication/auth_functions/forgot-password/forgot-password'; 
 export const routes: Routes = [
     {path: "", component: SplashScreen, title: "Tutorials page"},

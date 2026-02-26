@@ -1,4 +1,4 @@
-from auth import execute_auth_action, supabase
+from .auth import execute_auth_action, supabase
 
 def signup_user(user_signup_name:str, signup_email: str, signup_password: str):
     return execute_auth_action(
@@ -8,11 +8,12 @@ def signup_user(user_signup_name:str, signup_email: str, signup_password: str):
             "options": {
                 "data":{
                     "user_name": user_signup_name, 
-                }
+                },
+                "email_redirect_to": "https://localhost:4200/verify_email",
+
             }
         }),
         success_msg="User signed up successfully"
-        
     )
     
 
@@ -20,4 +21,5 @@ def signout_user():
     return execute_auth_action(
         lambda: supabase.auth.sign_out(),
         success_msg="Logout Successful" 
+        
     )

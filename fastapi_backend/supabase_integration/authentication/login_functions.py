@@ -1,4 +1,4 @@
-from auth import execute_auth_action, supabase
+from .auth import execute_auth_action, supabase
 
 
 def login_user(login_email:str, login_password:str):

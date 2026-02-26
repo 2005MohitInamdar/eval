@@ -1,4 +1,4 @@
-from auth import supabase, execute_auth_action
+from .auth import supabase, execute_auth_action
 
 def get_session():
     return execute_auth_action(
@@ -9,6 +9,3 @@ def retrieve_user():
     return execute_auth_action(
         lambda: supabase.auth.get_user()
     )
-
-session_result = get_session()
-print(session_result)

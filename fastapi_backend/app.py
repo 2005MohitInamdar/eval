@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 from typing import TypedDict
 import operator
 from typing import Annotated
-import asyncio
 import os
-import logging
 from typing import List
 load_dotenv()
 

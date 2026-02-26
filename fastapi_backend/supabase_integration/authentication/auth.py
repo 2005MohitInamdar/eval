@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 import logging
 
 load_dotenv()
-logging.basicConfig(level=logging.INFO)
-
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 url:str = os.getenv("SUPABASE_PROJECT_URL")
 key:str = os.getenv("SUPABASE_ANON_KEY")
 supabase: Client = create_client(url, key)

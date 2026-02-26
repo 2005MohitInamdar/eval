@@ -1,0 +1,1 @@
+for now we have set the endpoints on localhost later change the endpoints as per vercel

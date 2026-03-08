@@ -1,0 +1,46 @@
+<div class="flex h-screen w-full font-sans">
+    <aside class=" flex flex-col p-6 border-r border-gray-200 bg-white">
+        <h1 class="text-2xl font-bold mb-8 text-blue-600 tracking-tight">MockItOut</h1>
+
+        <nav class="flex flex-col">
+            <ul class="space-y-1 text-gray-500">
+                <a routerLink="dashboard" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="DashboardIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Dashboard</span>
+                </a>
+
+                <a routerLink="evaluation_report" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="ReportIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Evaluation Report</span>
+                </a>
+
+                <a routerLink="completed_interviews" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="CompletedIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Completed</span>
+                </a>
+
+                <a routerLink="remaining_interviews" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="RemainingIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Remaining</span>
+                </a>
+
+                <a routerLink="notifications" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="NotificationIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Notifications</span>
+                </a>
+
+                <a routerLink="resume" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors group">
+                    <lucide-icon [img]="ResumeIcon" class="w-4 h-4 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                    <span class="font-medium text-sm">Resume</span>
+                </a>
+            </ul>
+        </nav>
+
+        <div class="mt-auto pt-6 border-t border-gray-100">
+            <a routerLink="user_profile" routerLinkActive="bg-blue-50 text-blue-600" class="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 hover:text-blue-600 transition-colors group">
+                <lucide-icon [img]="ProfileIcon" class="w-5 h-5 text-gray-400 group-hover:text-blue-600"></lucide-icon>
+                <span class="text-sm">Profile</span>
+            </a>
+        </div>
+    </aside>
+</div>

@@ -1,0 +1,22 @@
+<header class="w-full bg-white border-b border-gray-200 px-8 py-3">
+  <nav class="flex justify-end items-center gap-2">
+    <!-- <a routerLink="user_profile" 
+       class="p-2 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors group" 
+       title="Profile">
+      <lucide-icon [img]="ProfileIcon" class="w-5 h-5 group-hover:scale-110 transition-transform"></lucide-icon>
+    </a> -->
+
+    <a routerLink="settings" 
+       class="p-2 rounded-lg text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors group" 
+       title="Settings">
+      <lucide-icon [img]="SettingsIcon" class="w-5 h-5 group-hover:rotate-45 transition-transform"></lucide-icon>
+    </a>
+
+    <div class="w-px h-6 bg-gray-200 mx-2"></div>
+
+    <button class="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors group" 
+            title="Logout">
+      <lucide-icon [img]="LogoutIcon" class="w-5 h-5"></lucide-icon>
+    </button>
+  </nav>
+</header>

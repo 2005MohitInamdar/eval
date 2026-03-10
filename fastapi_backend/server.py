@@ -17,7 +17,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://localhost:4200"],
+    allow_origins=["http://localhost:4200"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -57,9 +57,9 @@ class RequestQuestions(BaseModel):
     frontend_data: str
 
 class SignupRequest(BaseModel):
-    user_name:str
-    signup_email:str
-    signup_password: str
+    name:str
+    email:str
+    password: str
 
 class LoginRequest(BaseModel):
     login_email:str
@@ -99,9 +99,17 @@ async def universal_exception_handler(request: Request, exc: Exception):
 
 
 
-@app.post("/signup", status_code=status.HTTP_201_CREATED)
+@app.post("/auth/signup", status_code=status.HTTP_201_CREATED)
 def create_user(request: SignupRequest):
-    auth_response = signup_user(request.user_name, request.signup_email, request.signup_password)
+    print("Endpoint hit in backend!")
+
+    # userName = request.name
+    # signupEmail = request.email
+    # signupPassword = request.password
+    
+    
+    # print("Details received are: ", userName, " ", signupEmail, " ", signupPassword)
+    auth_response = signup_user(request.name, request.email, request.password)
     return {"response": auth_response}
     
 

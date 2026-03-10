@@ -1,5 +1,94 @@
-<h1>Welcome Back!</h1>
-<app-auth-ui-wrapper>
-    <button type="submit" (click)="login()">Login</button>
-    <p>Don't have an account? <a routerLink="/auth/signup">Create Account</a></p>
-</app-auth-ui-wrapper>
+<!-- <div class="flex justify-center items-center flex-col h-screen  bg-black text-white">
+    <div class="border p-10">
+        <h1 class="py-5">Welcome Back!</h1>
+        <div>
+            <app-auth-ui-wrapper>
+                <div>
+                    <button type="submit" (click)="login()" class="border px-5 py-1 mt-5">Login</button>
+                    <p class="mt-5 mb-5">Don't have an account? <a routerLink="/auth/signup"><u>Create Account</u></a></p>
+                </div>
+            </app-auth-ui-wrapper>
+        </div>
+    </div>
+</div> -->
+
+<div class="relative min-h-screen bg-slate-950 text-slate-100 overflow-hidden font-mono selection:bg-pink-500/30 flex">
+
+    <!-- Grid background -->
+    <div class="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+
+    <!-- LEFT SIDE — empty, ready for your video -->
+    <div class="hidden md:flex relative z-10 w-1/2 items-center justify-center">
+        <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-pink-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <!-- 🎬 drop your video component here -->
+    </div>
+
+    <!-- Diagonal divider -->
+    <div class="hidden md:block absolute inset-y-0 left-1/2 -translate-x-1/2 z-20 w-[2px] bg-gradient-to-b from-transparent via-cyan-800/40 to-transparent pointer-events-none"></div>
+
+    <!-- RIGHT SIDE — form -->
+    <div class="relative z-10 flex flex-col justify-center w-full md:w-1/2 min-h-screen p-8 md:p-16">
+
+        <!-- Ambient glow -->
+        <div class="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/8 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <!-- Corner decorations -->
+        <div class="absolute top-0 right-0 w-20 h-20 border-t border-r border-cyan-800/30"></div>
+        <div class="absolute bottom-0 right-0 w-12 h-12 border-b border-r border-slate-800"></div>
+        <p class="absolute top-8 right-8 text-[9px] tracking-widest text-slate-700 uppercase">SECURE_ACCESS // 4200</p>
+
+        <div class="relative w-full max-w-sm mx-auto">
+
+            <!-- Brand -->
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-1 h-8 bg-pink-500"></div>
+                <div>
+                    <p class="text-[9px] tracking-[0.4em] text-cyan-400 font-bold uppercase">SECURE_ACCESS</p>
+                    <h2 class="text-2xl font-black italic uppercase text-white">GATEWAY</h2>
+                </div>
+            </div>
+
+            <!-- Heading -->
+            <h1 class="text-5xl font-black uppercase mb-2 tracking-tighter leading-none">
+                Welcome<br/><span class="text-cyan-400">Back_</span>
+            </h1>
+            <p class="text-slate-500 text-xs mb-10 border-l border-slate-700 pl-4 uppercase">Initialize user session via EVAL protocol.</p>
+
+            <!-- Auth wrapper -->
+            <app-auth-ui-wrapper>
+                <div class="space-y-6 mt-2">
+                    <button
+                        type="submit"
+                        (click)="login()"
+                        class="group relative w-full bg-cyan-400 text-slate-950 font-black px-6 py-4 uppercase tracking-widest text-sm [clip-path:polygon(0_0,100%_0,100%_70%,90%_100%,0_100%)] hover:bg-white transition-all duration-300 flex items-center justify-between overflow-hidden cursor-pointer"
+                    >
+                        <span class="relative z-10">Login to Interface</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor"
+                            class="w-4 h-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                        </svg>
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    </button>
+
+                    <div class="text-center pt-2">
+                        <p class="text-[10px] text-slate-300 uppercase tracking-widest">
+                            No credentials?
+                            <a routerLink="/auth/signup" class="text-pink-400 hover:text-white transition-colors ml-2 underline underline-offset-4 decoration-pink-500/30 hover:decoration-white">
+                                Create Account
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </app-auth-ui-wrapper>
+
+            <!-- Footer status -->
+            <div class="mt-12 flex justify-between items-center opacity-40">
+                <div class="text-[9px] uppercase tracking-tighter flex gap-4">
+                    <span>Status: <span class="text-cyan-400">Online</span></span>
+                    <span>Port: 4200</span>
+                </div>
+                <p class="text-[9px] uppercase tracking-widest text-cyan-800">AGENT_UNIT: EVAL01</p>
+            </div>
+        </div>
+    </div>
+</div>

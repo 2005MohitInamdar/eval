@@ -1,12 +1,81 @@
-<div>
-    <div>
-        <h1 >Welcome to Eval</h1>
-        <h3>Your personal mock interview app</h3>
+
+<div class="relative min-h-screen bg-slate-950 text-slate-100 overflow-hidden font-mono selection:bg-pink-500/30">
+    
+    <div class="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,#1f2937_1px,transparent_1px),linear-gradient(to_bottom,#1f2937_1px,transparent_1px)] bg-[size:32px_32px]"></div>
+    
+    <div class="relative z-10 flex flex-col justify-between min-h-screen p-8 md:p-16 w-full md:w-1/2">
+        <header class="flex-none">
+            <div class="group flex items-center gap-3 cursor-pointer">
+                <div class="w-1.5 h-10 bg-cyan-400 group-hover:bg-pink-500 transition-colors"></div>
+                <div>
+                    <p class="text-[9px] tracking-[0.5em] text-cyan-400 group-hover:text-pink-400 font-bold uppercase transition-colors">AGENT_INTERFACE</p>
+                    <h2 class="text-4xl font-black tracking-tighter italic text-white uppercase">EVAL <span class="opacity-50 text-xl">v0.7</span></h2>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow flex items-center pr-12">
+        <div class="space-y-6">
+            <h1 class="text-6xl md:text-8xl font-black leading-none uppercase text-white">
+                ENGAGE<span class="text-cyan-400 text-6xl">_</span><br/> 
+                <span class="text-transparent stroke-text" style="-webkit-text-stroke: 1px rgba(255,255,255,0.8);">MOCK</span><br/>
+                PROTOCOL
+                </h1>
+                <p class="text-lg text-slate-400 max-w-sm border-l border-slate-700 pl-6 py-1">
+                    Simulate high-stakes interviews with precision Agentic AI.
+                    <span class="text-pink-400">Exceed your potential.</span>
+                </p>
+            </div>
+        </main>
+        
+        <footer class="flex-none pt-12 flex gap-4">
+            <button class="relative cursor-pointer group bg-cyan-400 text-slate-950 font-black px-12 py-3.5 uppercase tracking-widest text-sm [clip-path:polygon(0_0,100%_0,100%_70%,85%_100%,0_100%)] hover:bg-white transition-all duration-300 flex items-center gap-3" routerLink="/auth/login">
+                
+                Get Started
+                
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" 
+                    class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                </svg>
+            </button>
+        </footer>
     </div>
-    <div>
-        <button routerLink="/auth/login">Login</button>
-        <button routerLink="/auth/signup">Signup</button>
+
+    <div class="absolute inset-y-0 right-0 z-10 w-full md:w-[60%] flex items-center justify-center pointer-events-none">
+    
+        <div class="absolute inset-y-0 right-0 w-[80%] bg-slate-900 border-l border-cyan-800/30 md:w-[90%] md:[clip-path:polygon(20%_0,100%_0,100%_100%,0%_100%)]">
+            <div class="absolute top-0 right-0 w-24 h-24 bg-cyan-500/5 rotate-45"></div>
+            <p class="absolute bottom-8 right-8 text-[10px] text-cyan-800/60 uppercase tracking-widest">AGENT_UNIT: EVAL01</p>
+        </div>
+
+        <video #videoElement src="get.mp4" [muted]="true" [loop]="true" style="display:none"></video>
+
+        <canvas #canvasElement 
+                width="800" 
+                height="1000" 
+                class="relative z-20 h-[85vh] w-auto max-w-full drop-shadow-[0_0_35px_rgba(34,211,238,0.3)] pl-50">
+        </canvas>
+
+        <div class="absolute bottom-[10%] right-[20%] w-[40%] h-[60%] bg-cyan-500/10 rounded-full blur-[100px] z-10"></div>
     </div>
+
 </div>
 
 
+<svg width="0" height="0" class="absolute">
+  <filter id="chromaKey">
+    <feColorMatrix type="matrix"
+      values="1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              -1.5 3 -1.5 1 0" />
+  </filter>
+</svg>
+
+
+<!-- <img 
+    src="/v1.gif" 
+    alt="Agent EVAL"
+    class="relative z-20 object-contain object-bottom 
+    mask-image:linear-gradient(to_bottom,black_70%,transparent_100%)
+    drop-shadow-[0_0_15px_rgba(34,211,238,0.3)]">  -->

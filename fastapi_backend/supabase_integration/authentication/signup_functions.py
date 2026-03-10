@@ -9,7 +9,7 @@ def signup_user(user_signup_name:str, signup_email: str, signup_password: str):
                 "data":{
                     "user_name": user_signup_name, 
                 },
-                "email_redirect_to": "https://localhost:4200/verify_email",
+                "email_redirect_to": "https://localhost:4200/auth/verify_email",
 
             }
         }),

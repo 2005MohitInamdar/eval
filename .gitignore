@@ -10,6 +10,7 @@
 frontend/eval/node_modules
 frontend/eval/.angular/
 frontend/eval/dist/
+frontend/eval/public/
 
 npm-debug.log
 yarn-error.log

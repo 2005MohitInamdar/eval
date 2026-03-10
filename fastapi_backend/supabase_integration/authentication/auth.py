@@ -17,14 +17,15 @@ supabase: Client = create_client(url, key)
 if not url or not key:
     raise EnvironmentError("Supabase URL or Key not found in .env")
 
-def execute_auth_action(action_func):
+def execute_auth_action(action_func, success_msg=None):
     try:
         result = action_func()
+        display_message = success_msg if success_msg else "Auth action executed successfully"
         user = getattr(result, "user", None)
         session = getattr(result, "session", None)
         return {
             "success": True,
-            "message": "Auth action executed successfully",
+            "message": display_message,
             "data": {
                 "user": {
                     "id": getattr(user, "id", None),

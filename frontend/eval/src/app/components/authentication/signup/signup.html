@@ -1,5 +1,15 @@
-<h1>Create Account!</h1>
-<app-auth-ui-wrapper>
-    <button type="submit" (click)="signup()">Login</button>
-    <p>Already have an account? <a routerLink="/auth/login">Sign Up</a></p>
-</app-auth-ui-wrapper>
+<div class="flex justify-center items-center flex-col bg-black text-white h-screen">
+    <div class="border p-10">
+        <h1 >Create Account!</h1>
+        <div class="mt-5">
+            <app-auth-ui-wrapper>
+                <div>
+                    <button type="submit" (click)="signup()" class="mt-5 border px-5 py-1">Signup</button>
+                    <div class="mt-5">
+                        <p>Already have an account?<a routerLink="/auth/login" class="cursor-pointer mx-5"><u>Signup</u></a></p>
+                    </div>
+                </div>
+            </app-auth-ui-wrapper>
+        </div>
+    </div>
+</div>

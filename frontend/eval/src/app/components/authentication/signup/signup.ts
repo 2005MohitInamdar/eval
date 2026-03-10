@@ -3,6 +3,8 @@ import { Auth } from '../../../services/auth';
 import { AuthUiWrapper } from '../auth-ui-wrapper/auth-ui-wrapper';
 import { RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
+import { SignupService } from '../../../services/signup_service/signup-service';
+import { ChartNoAxesColumnDecreasing } from 'lucide-angular';
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -11,7 +13,8 @@ import { OnInit } from '@angular/core';
   styleUrls: ['./signup.scss'],
 })
 export class Signup implements OnInit{
-  authService = inject(Auth)
+  authService = inject(Auth);
+  signupService = inject(SignupService);
 
   ngOnInit(): void {
     this.authService.auth_page="SignUp"
@@ -19,6 +22,14 @@ export class Signup implements OnInit{
   signup(){
     if(this.authService.authForm.valid){
       console.log(this.authService.authForm.value)
+      this.signupService.signupUser(this.authService.authForm.value).subscribe({
+        next: (response) => {
+          alert("SIgnup Successful!")
+        },
+        error: (err) => {
+          console.log(err)
+        }
+      })
     }
   }
 }

@@ -15,6 +15,21 @@
                             placeholder="Enter callsign"
                             class="w-full bg-transparent border-0 border-b-2 border-slate-700 focus:border-cyan-400 outline-none py-3 text-white placeholder-slate-600 text-sm tracking-wider transition-colors duration-300"
                         />
+                        @if(name?.invalid && (name?.dirty || name?.touched)){
+                            <div class="text-[#ff6347] text-sm italic">
+                                @switch(true){
+                                    @case(name?.hasError('required')){
+                                        <span>Name required</span>
+                                    }
+                                    @case(name?.hasError('minLength')){
+                                        <span>Minimum 2 characters required</span>
+                                    }
+                                    @case(name?.hasError('pattern')){
+                                        <span>Only alphabets allowed</span>
+                                    }
+                                }
+                            </div>
+                        }
                         <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-cyan-400 group-focus-within:w-full transition-all duration-500"></div>
                     </div>
                 </div>
@@ -32,6 +47,18 @@
                         placeholder="agent@eval.io"
                         class="w-full bg-transparent border-0 border-b-2 border-slate-700 focus:border-cyan-400 outline-none py-3 text-white placeholder-slate-600 text-sm tracking-wider transition-colors duration-300"
                     />
+                    @if(email?.invalid && (email?.dirty || email?.touched)){
+                        <div class="text-[#ff6347] text-sm italic"> 
+                            @switch(true){
+                                @case(email?.hasError('required')){
+                                    <span>Email is required.</span>
+                                }
+                                @case(email?.hasError('email')){
+                                    <span>Please enter a valid email address.</span>
+                                }
+                            }
+                        </div>
+                    }
                     <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-cyan-400 group-focus-within:w-full transition-all duration-500"></div>
                 </div>
             </div>
@@ -48,6 +75,18 @@
                         placeholder="••••••••••••"
                         class="w-full bg-transparent border-0 border-b-2 border-slate-700 focus:border-cyan-400 outline-none py-3 text-white placeholder-slate-600 text-sm tracking-wider transition-colors duration-300"
                     />
+                    @if(password?.invalid && (password?.dirty || password?.touched)){
+                        <div class="text-[#ff6347] text-sm italic">
+                            @switch(true){
+                                @case(password?.hasError('required')){
+                                    <span>Password is required</span>
+                                }
+                                @case(password?.hasError('minLength')){
+                                    <span>Password must be at least 6 characters.</span>
+                                }
+                            }
+                        </div>
+                    }
                     <div class="absolute bottom-0 left-0 w-0 h-[2px] bg-cyan-400 group-focus-within:w-full transition-all duration-500"></div>
                 </div>
             </div>

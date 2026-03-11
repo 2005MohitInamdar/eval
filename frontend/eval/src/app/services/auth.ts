@@ -1,7 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Supabase } from './supabase/supabase';
 @Injectable({
   providedIn: 'root',
 })
@@ -9,6 +10,7 @@ export class Auth {
   authForm!:FormGroup;
   private localStorage: Storage | undefined;  
   auth_page:string = "Login";
+  supabaseService = inject(Supabase)
   
   constructor(private fb:FormBuilder, @Inject(PLATFORM_ID) private platformId: Object){
     this.localStorageSSRError()
@@ -47,7 +49,7 @@ export class Auth {
   // formGroup for login/signup
   initForm(){
     this.authForm = this.fb.group({
-      name: [""],
+      name: ["", [Validators.required, Validators.minLength(2), Validators.pattern("^[a-zA-Z-' ]+$")]], 
       email: ["", [Validators.required, Validators.email]],
       password: ["", [Validators.required, Validators.minLength(6)]]
     })
@@ -63,6 +65,25 @@ export class Auth {
   //   }
   // }
 
+
+  signupUser(userData:any){
+    const userName = userData.name
+    const email = userData.email
+    const password = userData.password
+      return this.supabaseService.supabase.auth.signUp(
+        {
+          email: email,
+          password: password,
+          options: {
+            emailRedirectTo: 'http://localhost:4200/ui_wrapper',
+            data: {
+              name: userName
+            }
+          }
+        }
+      )
+    } 
+   
   // submit button
   submit(){
     if(this.authForm.valid){

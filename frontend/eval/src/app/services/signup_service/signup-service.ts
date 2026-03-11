@@ -6,11 +6,13 @@ import { HttpClient } from '@angular/common/http';
 })
 export class SignupService {
   http = inject(HttpClient)
-  private readonly API_URL = "http://127.0.0.1:8000/auth/signup";
+  // private readonly API_URL = "http://127.0.0.1:8000/auth/signup";
 
   signupUser(userData:any){
-    console.log("Request send to backend!")
-    return this.http.post(this.API_URL, userData)
+    return this.http.post("http://127.0.0.1:8000/auth/signup", userData)
   }
   
+  logOutUser(){
+    return this.http.post("http://127.0.0.1:8000/logout", {})
+  }
 }

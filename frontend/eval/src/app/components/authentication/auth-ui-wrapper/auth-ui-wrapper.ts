@@ -17,10 +17,24 @@ export class AuthUiWrapper implements OnInit {
 
   // switching signup/login pages start
   ngOnInit(): void{
-    // this.authService.loadPage()
+    this.authService.initForm()
     this.authService.handleNameController()
   }
   
+  auth_form = this.authService.authForm
+
+  get name(){
+    return this.authService.authForm.get('name')
+  }
+  get email(){
+    return this.authService.authForm.get('email');
+  }
+  get password(){
+    return this.authService.authForm.get('password')
+  }
+
+
+
   // page parameter is passed from html page
   // setPage(page: string){
   //   this.authService.settingPage(page)

@@ -4,7 +4,7 @@ import { AuthUiWrapper } from '../auth-ui-wrapper/auth-ui-wrapper';
 import { RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
 import { SignupService } from '../../../services/signup_service/signup-service';
-import { ChartNoAxesColumnDecreasing } from 'lucide-angular';
+// import { ChartNoAxesColumnDecreasing } from 'lucide-angular';
 @Component({
   selector: 'app-signup',
   standalone: true,
@@ -21,14 +21,12 @@ export class Signup implements OnInit{
   }
   signup(){
     if(this.authService.authForm.valid){
-      console.log(this.authService.authForm.value)
-      this.signupService.signupUser(this.authService.authForm.value).subscribe({
-        next: (response) => {
-          alert("SIgnup Successful!")
-        },
-        error: (err) => {
-          console.log(err)
-        }
+      this.authService.signupUser(this.authService.authForm.value)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
       })
     }
   }

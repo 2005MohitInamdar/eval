@@ -13,9 +13,17 @@ import { RemainingInterviews } from './components/interview_dashboard/dashboard_
 import { Notifications } from './components/interview_dashboard/dashboard_functions/notifications/notifications';
 import { Resume } from './components/interview_dashboard/dashboard_functions/resume/resume';
 import { Profile } from './components/interview_dashboard/dashboard_functions/profile/profile';
+import { UploadResume } from './components/user_Onboarding/upload-resume/upload-resume';
+import { ConfirmResume } from './components/user_Onboarding/confirm-resume/confirm-resume';
+import { SelectionPage } from './components/user_Onboarding/selection-page/selection-page';
+
+
 export const routes: Routes = [
     {path: "", redirectTo: 'welcome', pathMatch: 'full'}, 
     {path: "welcome", component: SplashScreen, title: "Tutorials page"},
+    {path: 'uploadResume', component: UploadResume, title: "Upload Resume page"},
+    {path: 'ConfirmResume', component: ConfirmResume, title: "Confirm resume details Page"},
+    {path: 'SelectionPage', component: SelectionPage, title: "Select desired company and role pages!"},
     {path: 'auth/signup', component: Signup, title: "SignUp page"},
     {path: "auth/login", component: Login, title: "Login page"},
     {path: "auth/verify_email", component: VerifyEmail, title: "Email Verification page"},

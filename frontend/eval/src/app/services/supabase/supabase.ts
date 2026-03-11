@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import { environment } from '../../../environments/environment.development';
-// import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class Supabase {
-  // public currentUser = new BehaviorSubject<any>(null);
+  public currentUser = new BehaviorSubject<any>(null);
 
   supabase: SupabaseClient
 
@@ -24,12 +24,12 @@ export class Supabase {
       }
     )
 
-    // this.supabase.auth.onAuthStateChange((event, session) => {
-    //   if (session?.user) {
-    //     this.currentUser.next(session.user);
-    //   } else {
-    //     this.currentUser.next(null);
-    //   }
-    // })
+    this.supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        this.currentUser.next(session.user);
+      } else {
+        this.currentUser.next(null);
+      }
+    })
   }  
 }

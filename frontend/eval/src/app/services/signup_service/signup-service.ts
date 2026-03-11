@@ -1,18 +1,33 @@
 import { inject, Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Supabase } from '../supabase/supabase'; 
+
 // import { Inject } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
 export class SignupService {
-  http = inject(HttpClient)
-  // private readonly API_URL = "http://127.0.0.1:8000/auth/signup";
-
-  signupUser(userData:any){
-    return this.http.post("http://127.0.0.1:8000/auth/signup", userData)
-  }
   
-  logOutUser(){
-    return this.http.post("http://127.0.0.1:8000/logout", {})
-  }
+  supabaseService = inject(Supabase)
+  
+  signupUser(userData:any){
+    const userName = userData.name
+    const email = userData.email
+    const password = userData.password
+      return this.supabaseService.supabase.auth.signUp(
+        {
+          email: email,
+          password: password,
+          options: {
+            emailRedirectTo: 'http://localhost:4200/ui_wrapper',
+            data: {
+              name: userName
+            }
+          }
+        }
+      )
+    } 
+
+    signoutUser(){
+      return this.supabaseService.supabase.auth.signOut()
+    }
 }

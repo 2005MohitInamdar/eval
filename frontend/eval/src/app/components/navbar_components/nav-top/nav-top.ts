@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { LucideAngularModule, User, Settings, LogOut } from 'lucide-angular';
 import { SignupService } from '../../../services/signup_service/signup-service';
-
 @Component({
   selector: 'app-nav-top',
   standalone:true, 
@@ -10,20 +9,19 @@ import { SignupService } from '../../../services/signup_service/signup-service';
   styleUrls: ['./nav-top.scss'],
 })
 export class NavTop {
-  
+  signupService = inject(SignupService)
   readonly ProfileIcon = User;
   readonly SettingsIcon = Settings;
   readonly LogoutIcon = LogOut;
 
-  signupService = inject(SignupService)
   logout(){
-    this.signupService.logOutUser().subscribe({
-      next:(response) => {
-        console.log(response)
-      },
-      error: (err) => {
-        console.log(err)
-      }
+    this.signupService.signoutUser().
+    then((res) => {
+      console.log(res)
+      alert("User logged out successfully!")
+    })
+    .catch((err) => {
+      console.log(err)
     })
   }
 }

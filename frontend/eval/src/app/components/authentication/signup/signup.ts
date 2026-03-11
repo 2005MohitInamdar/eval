@@ -19,10 +19,12 @@ export class Signup implements OnInit{
   ngOnInit(): void {
     this.authService.auth_page="SignUp"
   }
+
   signup(){
     if(this.authService.authForm.valid){
-      this.authService.signupUser(this.authService.authForm.value)
+      this.signupService.signupUser(this.authService.authForm.value)
       .then((res) => {
+        alert("Account created successfully!")
         console.log(res)
       })
       .catch((err) => {
@@ -30,4 +32,6 @@ export class Signup implements OnInit{
       })
     }
   }
+
+  
 }

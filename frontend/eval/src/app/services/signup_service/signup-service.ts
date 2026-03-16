@@ -18,7 +18,7 @@ export class SignupService {
           email: email,
           password: password,
           options: {
-            emailRedirectTo: 'http://localhost:4200/ui_wrapper',
+            emailRedirectTo: 'http://localhost:4200/uploadResume',
             data: {
               name: userName
             }

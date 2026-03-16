@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { DragnDrop } from './dragNDropDirective/dragn-drop';
 import { HttpClient } from '@angular/common/http';
 // import { RouterLink } from '@angular/router';
+import { NavTop } from '../../navbar_components/nav-top/nav-top';
 @Component({
   selector: 'app-upload-resume',
   standalone:true,
-  imports: [DragnDrop],
+  imports: [DragnDrop, NavTop],
   templateUrl: './upload-resume.html',
   styleUrls: ['./upload-resume.scss'],
 })

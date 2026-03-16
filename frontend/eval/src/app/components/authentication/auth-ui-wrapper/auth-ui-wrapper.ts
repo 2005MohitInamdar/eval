@@ -1,6 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Auth } from '../../../services/auth';
+import { LoginService } from '../../../services/login_service/login-service';
 @Component({
   selector: 'app-auth-ui-wrapper',
   standalone: true,
@@ -11,6 +13,11 @@ import { Auth } from '../../../services/auth';
 export class AuthUiWrapper implements OnInit {
   authForm!:FormGroup;
   authService = inject(Auth);
+  private platformID = inject(PLATFORM_ID)
+  loginService = inject(LoginService)
+  current_page!:string | null
+    // private localStorage: Storage | undefined;  
+
   
   constructor(private fb:FormBuilder){
   }
@@ -19,6 +26,10 @@ export class AuthUiWrapper implements OnInit {
   ngOnInit(): void{
     this.authService.initForm()
     this.authService.handleNameController()
+    if(isPlatformBrowser(this.platformID)){
+      this.current_page = localStorage.getItem("current_auth_page")
+    }
+
   }
   
   auth_form = this.authService.authForm
@@ -33,7 +44,16 @@ export class AuthUiWrapper implements OnInit {
     return this.authService.authForm.get('password')
   }
 
-
+  async SignInWIthGoogle(){
+    try{
+      await this.loginService.loginWithGoogle()
+    }
+    catch(err){
+      console.log("SIgn In with Google failed", err)
+      alert("Failed to login with google")
+    }
+    console.log("Button for google signin clicked!")
+  }
 
   // page parameter is passed from html page
   // setPage(page: string){

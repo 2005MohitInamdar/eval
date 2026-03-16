@@ -6,7 +6,21 @@ import { Supabase } from '../supabase/supabase';
 export class LoginService {
   supabaseService = inject(Supabase)
 
-  login(){
-    
+  login(loginEmail:string, loginPassword:string){
+    return this.supabaseService.supabase.auth.signInWithPassword({
+      "email": loginEmail,
+      "password": loginPassword
+    })
+  }
+
+  async loginWithGoogle(){
+    const {error} = await this.supabaseService.supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: 'http://localhost:4200/uploadResume'
+        // redirectTo: window.location.origin
+        
+      },
+    })
   }
 }

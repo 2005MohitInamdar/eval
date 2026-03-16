@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Auth } from '../../../services/auth';
 import { AuthUiWrapper } from '../auth-ui-wrapper/auth-ui-wrapper';
 import { RouterLink } from '@angular/router';
@@ -13,11 +14,15 @@ import { SignupService } from '../../../services/signup_service/signup-service';
   styleUrls: ['./signup.scss'],
 })
 export class Signup implements OnInit{
+  private platformID = inject(PLATFORM_ID)
   authService = inject(Auth);
   signupService = inject(SignupService);
 
   ngOnInit(): void {
     this.authService.auth_page="SignUp"
+    if(isPlatformBrowser(this.platformID)){
+      localStorage.setItem("current_auth_page", this.authService.auth_page)
+    }
   }
 
   signup(){

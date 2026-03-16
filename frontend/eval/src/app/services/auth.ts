@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 export class Auth {
   authForm!:FormGroup;
   private localStorage: Storage | undefined;  
-  auth_page:string = "Login";
+  auth_page:string = "";
   
   constructor(private fb:FormBuilder, @Inject(PLATFORM_ID) private platformId: Object){
     this.localStorageSSRError()
@@ -42,4 +42,6 @@ export class Auth {
     })
   }
 
-}
+  // authGuard canMatch
+  
+} 

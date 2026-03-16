@@ -56,3 +56,4 @@ fastapi_backend/check_model.py
 fastapi_backend/main.py
 
 .env
+notes.txt

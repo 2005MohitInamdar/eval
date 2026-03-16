@@ -50,8 +50,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-class EvaluationRequest(BaseModel):
-    user_input: str
+
 
 class RequestQuestions(BaseModel):
     frontend_data: str
@@ -150,16 +149,10 @@ def email_update(request: UpdateUserPassword, user=Depends(get_current_user)):
     logging.info(f"User {user.id} is requesting to change password")
     auth_response = update_user_password(request.password)
     return {"response": auth_response}
-# auth api endpoints end
 
 
-# output = []
-@app.post("/resume_analysis")
-async def resume_analysis(request: EvaluationRequest, user=Depends(get_current_user)):
-    logging.info(f"User {user.id} is requesting analysis")
-    generator = resume_evaluation(request.user_input)
-    # output.append(generator)
-    return StreamingResponse(generator, media_type="text/event-stream")
+
+
 
 
 @app.post("/generate_questions")
@@ -168,6 +161,9 @@ async def generate_questions(request: RequestQuestions, user=Depends(get_current
     generator = run_chain(request.frontend_data)
     return StreamingResponse(generator, media_type="text/event-stream")
 
+@app.post("/uploadedResume")
+def analyzeResume():
+    pass
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -25,6 +25,7 @@ export class Login implements OnInit{
     if(isPlatformBrowser(this.platformID)){
       localStorage.setItem("current_auth_page", this.authService.auth_page)
     }
+
   }
   login(){
     if(this.authService.authForm.valid){
@@ -39,7 +40,7 @@ export class Login implements OnInit{
         else{
           console.log(res.data)
           alert("Login Successful")
-          this.router.navigate(['/ui_wrapper'])  
+          // this.router.navigate(['/uploadResume'])  
         }
       })
     }

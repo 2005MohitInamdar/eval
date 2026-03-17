@@ -5,30 +5,45 @@ import { SplashScreen } from './components/splash_screen/splash-screen/splash-sc
 import { UpdatePassword } from './components/authentication/auth_functions/update-password/update-password'; 
 import { VerifyEmail } from './components/authentication/auth_functions/verify-email/verify-email'; 
 import { ForgotPassword } from './components/authentication/auth_functions/forgot-password/forgot-password'; 
-import { ConfirmResume } from './components/user_Onboarding/confirm-resume/confirm-resume';
-import { SelectionPage } from './components/user_Onboarding/selection-page/selection-page';
 import { authGuard } from './services/authGuard';
+import { guestGuard } from './services/guestGuard';
+// import { UploadResume } from './components/user_Onboarding/upload-resume/upload-resume';
 export const routes: Routes = [
     {path: "", redirectTo: 'welcome', pathMatch: 'full'}, 
     {path: "welcome", component: SplashScreen, title: "Tutorials page"},      
       {
           path: 'uploadResume',
           title: "Upload Resume page", 
-          canMatch: [authGuard],
+          canActivate: [authGuard],
+          // component: UploadResume
           loadComponent: () => import ('./components/user_Onboarding/upload-resume/upload-resume').then(m => m.UploadResume)
       },
-    {path: 'ConfirmResume', component: ConfirmResume, title: "Confirm resume details Page"},
-    {path: 'SelectionPage', component: SelectionPage, title: "Select desired company and role pages!"},
-    {path: 'auth/signup', component: Signup, title: "SignUp page"},
-    {path: "auth/login", component: Login, title: "Login page"},
+      {
+          path: 'ConfirmResume',
+          title: "Confirm resume details Page", 
+          canActivate: [authGuard],
+          // component: UploadResume
+          loadComponent: () => import ('./components/user_Onboarding/confirm-resume/confirm-resume').then(m => m.ConfirmResume)
+      },
+      {
+          path: 'SelectionPage',
+          title: "Select desired company and role pages!", 
+          canActivate: [authGuard],
+          // component: UploadResume
+          loadComponent: () => import ('./components/user_Onboarding/selection-page/selection-page').then(m => m.SelectionPage)
+      },
+      // app.routes.ts
+
+    {path: 'auth/signup', component: Signup, title: "SignUp page", canActivate: [guestGuard]},
+    {path: "auth/login", component: Login, title: "Login page", canActivate: [guestGuard]},
     {path: "auth/verify_email", component: VerifyEmail, title: "Email Verification page"},
     {path: "auth/update_password", component: UpdatePassword, title: "Update Password page"},
     {path: "auth/forgot_password", component: ForgotPassword, title: "Forgot Password page"},
     {
       path: "mockInterview",
-      canActivate: [authGuard], 
       title: "MOCK interview Page",
-      loadComponent: () => import ('./components/mock-interview/mock-interview').then(m => m.MockInterview),
+      canActivate: [authGuard], 
+      loadComponent: () => import('./components/mock-interview/mock-interview').then(m => m.MockInterview),
     },
     {
         path: "ui_wrapper",
@@ -75,3 +90,11 @@ export const routes: Routes = [
           ]
     },
 ];
+
+
+
+
+
+
+
+

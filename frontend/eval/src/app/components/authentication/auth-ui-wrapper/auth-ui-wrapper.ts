@@ -3,6 +3,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Auth } from '../../../services/auth';
 import { LoginService } from '../../../services/login_service/login-service';
+import { Supabase } from '../../../services/supabase/supabase';
+import { Router } from '@angular/router';
+import { filter } from 'rxjs';
 @Component({
   selector: 'app-auth-ui-wrapper',
   standalone: true,
@@ -16,6 +19,8 @@ export class AuthUiWrapper implements OnInit {
   private platformID = inject(PLATFORM_ID)
   loginService = inject(LoginService)
   current_page!:string | null
+  supabaseService = inject(Supabase)
+  router = inject(Router)
     // private localStorage: Storage | undefined;  
 
   
@@ -29,7 +34,15 @@ export class AuthUiWrapper implements OnInit {
     if(isPlatformBrowser(this.platformID)){
       this.current_page = localStorage.getItem("current_auth_page")
     }
-
+    this.supabaseService.currentUser
+    .pipe(filter(user => user !== undefined))
+    .subscribe(user => {
+      
+      if (user) {
+        // If we find a user, get them off the login page
+        this.router.navigate(['/uploadResume']);
+      }
+    });
   }
   
   auth_form = this.authService.authForm

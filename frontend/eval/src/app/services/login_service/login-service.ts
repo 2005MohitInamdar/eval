@@ -14,7 +14,8 @@ export class LoginService {
   }
 
   async loginWithGoogle(){
-    const {error} = await this.supabaseService.supabase.auth.signInWithOAuth({
+    console.log("Login with google: ")
+    const {data, error} = await this.supabaseService.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: 'http://localhost:4200/uploadResume'

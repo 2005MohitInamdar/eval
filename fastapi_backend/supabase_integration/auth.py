@@ -11,11 +11,11 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 url:str = os.getenv("SUPABASE_PROJECT_URL")
-key:str = os.getenv("SUPABASE_ANON_KEY")
-supabase: Client = create_client(url, key)
+service_role:str = os.getenv("SUPABASE_SERVICE_ROLE")
+supabase: Client = create_client(url, service_role)
 
-if not url or not key:
-    raise EnvironmentError("Supabase URL or Key not found in .env")
+if not url or not service_role:
+    raise EnvironmentError("Supabase Service role or Key not found in .env")
 
 def execute_auth_action(action_func, success_msg=None):
     try:

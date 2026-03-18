@@ -90,11 +90,14 @@ export const routes: Routes = [
           ]
     },
 ];
+// ------------------------------------------------------------------------------------------------------------
 
 
 
 
-
-
-
-
+// import { Routes } from "@angular/router";
+// import { UploadResume } from "./components/user_Onboarding/upload-resume/upload-resume";
+// export const routes: Routes =  [
+//   {path: '', redirectTo: 'uploadResume', pathMatch:'full'}, 
+//   {path: 'uploadResume', component: UploadResume, title: 'upload resume page'}
+// ]

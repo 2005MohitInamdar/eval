@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 // import { RouterLink } from '@angular/router';
 import { NavTop } from '../../navbar_components/nav-top/nav-top';
 import { Router } from '@angular/router';
+import { Supabase } from '../../../services/supabase/supabase';
 @Component({
   selector: 'app-upload-resume',
   standalone:true,
@@ -13,10 +14,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./upload-resume.scss'],
 })
 export class UploadResume implements OnInit{
-  router = inject(Router);
+  private router = inject(Router);
   private platformId = inject(PLATFORM_ID)
-  // fileInput:string = ""
   private http = inject(HttpClient)
+  private supabaseService = inject(Supabase)
   fileName: string | undefined = ""
   selectedFile!:File | undefined 
 
@@ -47,7 +48,46 @@ export class UploadResume implements OnInit{
     this.selectedFile = file
   }
 
-  submitResume(){
-    
+
+  async fileSupabaseUpload(file:File | undefined){
+    if(!file){
+      console.log("No file selected!")
+      return 
+    }
+
+    const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+    const name_of_file = `${Date.now()}_${sanitizedName}`; 
+    const filePath = `user/${name_of_file}`;
+
+    console.log("filePath: ", filePath)
+    const {data, error} = await this.supabaseService.supabase.storage.from('resumes').upload(filePath, file)
+    if(error){
+      console.log(error)
+      alert(`resume upload unsuccessful: ${error}`)
+    }
+    else{
+      console.log(data.path)
+      const payload = {
+        'file_path' : data.path,
+        'file_name' : name_of_file,
+        'mime_type' : file.type
+      }
+      this.http.post('http://127.0.0.1:8000/uploadedResume', payload).subscribe({
+        next: (res) => {
+          // console.log("Suuccessful", res)
+        },
+        error: (err) => {
+          console.log("unSuccessful: ", err)
+        }
+      })
+      alert("File upload successful!")
+    }
   }
+
+
+  submitResume(){
+    console.log("File selected", this.fileName)
+    this.fileSupabaseUpload(this.selectedFile)
+
+  } 
 }

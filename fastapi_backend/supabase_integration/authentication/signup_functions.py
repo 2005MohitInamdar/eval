@@ -1,22 +1,22 @@
-from .auth import execute_auth_action, supabase
+# from .auth import execute_auth_action, supabase
 
-def signup_user(user_signup_name:str, signup_email: str, signup_password: str):
-    return execute_auth_action(
-        lambda: supabase.auth.sign_up({
-            "email" : signup_email,
-            "password": signup_password,
-            "options": {
-                "data":{
-                    "user_name": user_signup_name, 
-                },
-                "email_redirect_to": "http://localhost:4200/ui_wrapper",
-            }
-        }),
-        success_msg="User signed up successfully"
-    )
+# def signup_user(user_signup_name:str, signup_email: str, signup_password: str):
+#     return execute_auth_action(
+#         lambda: supabase.auth.sign_up({
+#             "email" : signup_email,
+#             "password": signup_password,
+#             "options": {
+#                 "data":{
+#                     "user_name": user_signup_name, 
+#                 },
+#                 "email_redirect_to": "http://localhost:4200/ui_wrapper",
+#             }
+#         }),
+#         success_msg="User signed up successfully"
+#     )
 
-def signout_user():
-    return execute_auth_action(
-        lambda: supabase.auth.sign_out(),
-        success_msg="User Logged out Successfully"
-    )
+# def signout_user():
+#     return execute_auth_action(
+#         lambda: supabase.auth.sign_out(),
+#         success_msg="User Logged out Successfully"
+#     )

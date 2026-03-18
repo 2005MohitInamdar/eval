@@ -37,19 +37,16 @@ export const authGuard: CanActivateFn = async (route, state) => {
   // }
 
   try {
-  // 1. Ask Supabase directly: "Do we have a valid session in storage RIGHT NOW?"
   const { data: { session } } = await supabaseService.supabase.auth.getSession();
 
   if (session?.user) {
     return true; 
   }
 
-  // 2. If no session, check for the PKCE code
   if (window.location.search.includes('code=')) {
     return true; 
   }
 
-  // 3. No session, no code = GET OUT
   return router.createUrlTree(['/auth/login']);
   } catch (e) {
     return router.createUrlTree(['/auth/login']);

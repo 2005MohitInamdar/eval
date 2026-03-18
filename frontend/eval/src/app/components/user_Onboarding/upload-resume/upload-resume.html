@@ -6,7 +6,7 @@
 
         <div appDragnDrop (click)="fileInput.click()" class="border border-white px-5 py-2.5" (filesDropped)="handleDroppedFiles($event)">
             <p>{{fileName || "No File Selected"}}</p>
-            <button type="button" (click)="fileInput.click()" class="border border-white px-2 py-1">Upload</button>
+            <button type="button"  class="border border-white px-2 py-1">Upload</button>
         </div>
         <button (click)="submitResume()">Next</button>
     </div>

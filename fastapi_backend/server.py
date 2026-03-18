@@ -9,10 +9,9 @@ from fastapi import HTTPException, status, Request, Depends
 from fastapi.responses import StreamingResponse
 from app import run_chain
 from resume_evaluation.evaluation import resume_evaluation
-from supabase_integration.authentication.signup_functions import  signout_user, signup_user
-from supabase_integration.authentication.login_functions import login_user
-from supabase_integration.authentication.auth_extra_functions import reset_password_using_email,update_user_email, update_user_password
-from supabase_integration.authentication.auth import supabase
+from supabase_integration.auth import supabase
+from urllib.parse import unquote
+from resume_evaluation.resume_extraction import resume_Parser
 app = FastAPI()
 
 app.add_middleware(
@@ -24,27 +23,6 @@ app.add_middleware(
 
 security = HTTPBearer()
 
-async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """
-    Validates the JWT token sent in the Authorization header.
-    """
-    token = credentials.credentials
-    try:
-        # Ask Supabase to verify this specific JWT
-        supabase.postgrest.auth(token)
-        user_response = supabase.auth.get_user(token)
-        
-        if not user_response.user:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid or expired session",
-            )
-        return user_response.user
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Could not validate credentials: {str(e)}",
-        )
 
 logging.basicConfig(
     level=logging.INFO,
@@ -74,6 +52,12 @@ class UpdateUserEmail(BaseModel):
 class UpdateUserPassword(BaseModel):
     password:str
 
+
+class uploadedResume(BaseModel):
+    file_path:str
+    file_name:str
+    mime_type:str
+
 @app.get("/health")
 def home():
     return {"message": "Backend health 🟢"}
@@ -98,72 +82,25 @@ async def universal_exception_handler(request: Request, exc: Exception):
 
 
 
-@app.post("/auth/signup", status_code=status.HTTP_201_CREATED)
-def create_user(request: SignupRequest):
-    print("Endpoint hit in backend!")
 
-    # userName = request.name
-    # signupEmail = request.email
-    # signupPassword = request.password
+async def download_file(filePath):
+    fileBytes = supabase.storage.from_('resumes').download(filePath)
+    return fileBytes
     
-    
-    # print("Details received are: ", userName, " ", signupEmail, " ", signupPassword)
-    auth_response = signup_user(request.name, request.email, request.password)
-    return {"response": auth_response}
-    
-
-@app.post("/logout")
-def logout_current_user():
-    auth_response = signout_user()
-    return {"response": auth_response}
-
-
-
-
-@app.post("/login")
-def login(request: LoginRequest):
-    auth_response = login_user(request.login_email, request.login_password)
-    if not auth_response:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Email or password"
-        )
-    return {"response": auth_response}
-    
-
-@app.post("/reset_password")
-def password_reset(request: ResetPasswordRequest):
-    auth_response = reset_password_using_email(request.user_email)
-    return {"response": auth_response}
-    
-
-@app.post("/update_user_email")
-def email_update(request: UpdateUserEmail, user=Depends(get_current_user)):
-    logging.info(f"User {user.id} is requesting to change email")
-    auth_response = update_user_email(request.user_email)
-    return {"response": auth_response}
-
-
-@app.post("/update_user_password")
-def email_update(request: UpdateUserPassword, user=Depends(get_current_user)):
-    logging.info(f"User {user.id} is requesting to change password")
-    auth_response = update_user_password(request.password)
-    return {"response": auth_response}
-
-
-
-
-
-
-@app.post("/generate_questions")
-async def generate_questions(request: RequestQuestions, user=Depends(get_current_user)):
-    logging.info(f"User {user.id} is requesting for interview questions")
-    generator = run_chain(request.frontend_data)
-    return StreamingResponse(generator, media_type="text/event-stream")
-
 @app.post("/uploadedResume")
-def analyzeResume():
-    pass
+async def analyzeResume(payload: uploadedResume):
+    print("File name: ", payload.file_path)
+    try:
+        source = await download_file(payload.file_path)
+        structured_resposne = await resume_Parser(source, payload.file_name)
+        print("structured_data: ", structured_resposne.data)
+    except Exception as e:
+        print(e)
+    return {
+        "status":"success",
+        "message": "metadata synched", 
+        "path_received": payload.file_path
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

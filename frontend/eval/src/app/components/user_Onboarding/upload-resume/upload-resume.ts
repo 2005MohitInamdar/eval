@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { NavTop } from '../../navbar_components/nav-top/nav-top';
 import { Router } from '@angular/router';
 import { Supabase } from '../../../services/supabase/supabase';
+import { syncResponse } from '../../../services/resume/user-resume';
 @Component({
   selector: 'app-upload-resume',
   standalone:true,
@@ -13,6 +14,7 @@ import { Supabase } from '../../../services/supabase/supabase';
   templateUrl: './upload-resume.html',
   styleUrls: ['./upload-resume.scss'],
 })
+
 export class UploadResume implements OnInit{
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID)
@@ -55,9 +57,15 @@ export class UploadResume implements OnInit{
       return 
     }
 
+    const { data: { user } } = await this.supabaseService.supabase.auth.getUser();
+
+    if(!user){
+      return 
+    }
+
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
     const name_of_file = `${Date.now()}_${sanitizedName}`; 
-    const filePath = `user/${name_of_file}`;
+    const filePath = `${user.id}/${name_of_file}`;
 
     console.log("filePath: ", filePath)
     const {data, error} = await this.supabaseService.supabase.storage.from('resumes').upload(filePath, file)
@@ -73,8 +81,9 @@ export class UploadResume implements OnInit{
         'mime_type' : file.type
       }
       this.http.post('http://127.0.0.1:8000/uploadedResume', payload).subscribe({
-        next: (res) => {
-          // console.log("Suuccessful", res)
+        next: (res:any) => {
+          const response_data = res.extracted_resume_details
+          localStorage.setItem("resume_data", JSON.stringify(response_data))
         },
         error: (err) => {
           console.log("unSuccessful: ", err)

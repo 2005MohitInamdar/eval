@@ -92,14 +92,15 @@ async def analyzeResume(payload: uploadedResume):
     print("File name: ", payload.file_path)
     try:
         source = await download_file(payload.file_path)
-        structured_resposne = await resume_Parser(source, payload.file_name)
-        print("structured_data: ", structured_resposne.data)
+        structured_resposnse = await resume_Parser(source, payload.file_name)
+        print("structured_data: ", structured_resposnse.data)
     except Exception as e:
         print(e)
     return {
         "status":"success",
         "message": "metadata synched", 
-        "path_received": payload.file_path
+        "path_received": payload.file_path,
+        "extracted_resume_details": structured_resposnse
     }
 
 if __name__ == "__main__":

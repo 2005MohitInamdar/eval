@@ -28,25 +28,41 @@ interface ResumeEntries {
 })
 export class ConfirmResume implements OnInit{
   private platformid = inject(PLATFORM_ID)
+
   isDisabled:boolean=true
   techSkillVisibility:boolean = true
   projectsVisibility:boolean = true
   educationVisibility:boolean=true
+  experienceVisibility:boolean=true
+
   raw_data!: any
   resume_data!:ResumeEntries
   newSoftSkill:string = ""
   newTechSkill:string = ""
   newProject:string = ""
+  exp_Description:string = ""
+
 
   edu = [
     {
-      newInstitution: "",
-      newDegree: "",
-      newMarks: "",
-      newPassingYear: ""
+      institution: "",
+      degree: "",
+      percentage_or_cgpa: "",
+      year_of_passing: ""
+    }
+  ]
+
+
+  exp = [
+    {
+      company: "",
+      description: [] as string[],
+      job_title: "",
+      duration: "",
     }
   ]
   
+
   resume = new FormGroup ({
     name: new FormControl(""),
     email: new FormControl(),
@@ -70,7 +86,6 @@ export class ConfirmResume implements OnInit{
       const placeholder_data = parsedData.data
       this.resume_data = placeholder_data as ResumeEntries;
       
-      console.log(this.resume_data.experience[0].duration)
 
       this.setEducation(this.resume_data.education);
       this.setFieldValue("technical_skills", this.resume_data.skills[0].technical_skills)
@@ -120,11 +135,25 @@ export class ConfirmResume implements OnInit{
 
   
   setEducation(educationData: any[]) {
-    this.educationArray.clear(); 
+    // this.educationArray.clear(); 
 
     educationData.forEach(edu => {
       this.educationArray.push(this.createEducationGroup(edu));
     });
+  }
+
+
+  educationSave(){
+    this.setEducation(this.edu)
+    this.edu = [
+      {
+        institution: "",
+        degree: "",
+        percentage_or_cgpa: "",
+        year_of_passing: ""
+      }
+    ]
+    this.educationVisibility = !this.educationVisibility
   }
 
   nestedFieldArray(expIndex: number): FormArray {
@@ -148,8 +177,7 @@ export class ConfirmResume implements OnInit{
  
 
   createExperienceGroup(exp?: any): FormGroup {
-    const description = exp?.description
-    console.log(description)
+
     return new FormGroup({
       company: new FormControl(exp?.company ?? ''),
       duration: new FormControl(exp?.duration ?? ''),
@@ -167,8 +195,18 @@ export class ConfirmResume implements OnInit{
       }
     });
   }
+  saveNewExperience(){
 
-  
+    const fixed_desc_data = this.exp_Description.split(",")
+    const final_desc_data = fixed_desc_data.map(desc => desc.trim())
+    if(final_desc_data){
+      this.exp[0].description = final_desc_data
+    }
+    console.log(typeof this.exp_Description)
+    this.setExperience(this.exp)
+  }
+
+
   toggleVisibility(field:string){
     switch(field){
       case "soft_skills":
@@ -183,7 +221,9 @@ export class ConfirmResume implements OnInit{
       case "education":
         this.educationVisibility = !this.educationVisibility
         break;  
-
+      case "experience":
+        this.experienceVisibility = !this.experienceVisibility
+        break;  
     }
   }
   
@@ -212,7 +252,9 @@ export class ConfirmResume implements OnInit{
         this.projectsVisibility = !this.projectsVisibility
         break;
     }
-  }
+  } 
+
+
 
   confirmResumeData(){}
 }

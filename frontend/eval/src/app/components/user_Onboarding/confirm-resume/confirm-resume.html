@@ -76,26 +76,26 @@
             </span>
           </div>
         </div>
-         @if(!educationVisibility){        
+         @if(!educationVisibility){    
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <span class="flex flex-col gap-1">
               <label class="text-sm text-gray-600">Institution</label>
-              <input type="text" class="input-style" placeholder="University Name" [(ngModel)]="edu[0].newInstitution" [ngModelOptions]="{standalone: true}">
+              <input type="text" class="input-style" placeholder="University Name" [(ngModel)]="edu[0].institution" [ngModelOptions]="{standalone: true}">
             </span>
             <span class="flex flex-col gap-1">
               <label class="text-sm text-gray-600">Degree</label>
-              <input type="text" class="input-style" placeholder="B.S. Computer Science" [(ngModel)]="edu[0].newDegree" [ngModelOptions]="{standalone: true}">
+              <input type="text" class="input-style" placeholder="B.S. Computer Science" [(ngModel)]="edu[0].degree" [ngModelOptions]="{standalone: true}">
             </span>
             <span class="flex flex-col gap-1">
               <label class="text-sm text-gray-600">Percentage / CGPA</label>
-              <input type="number" class="input-style" [(ngModel)]="edu[0].newMarks" [ngModelOptions]="{standalone: true}">
+              <input type="number" class="input-style" [(ngModel)]="edu[0].percentage_or_cgpa" [ngModelOptions]="{standalone: true}">
             </span>
             <span class="flex flex-col gap-1">
               <label class="text-sm text-gray-600">Year of Passing</label>
-              <input type="text" class="input-style" placeholder="2024" [(ngModel)]="edu[0].newPassingYear"[ngModelOptions]="{standalone: true}">
+              <input type="text" class="input-style" placeholder="2024" [(ngModel)]="edu[0].year_of_passing"[ngModelOptions]="{standalone: true}">
             </span>
+            <button class="border border-dark" (click)="educationSave()">Save</button>
           </div>
-        <!-- } -->
         } 
       </section>
 
@@ -130,7 +130,7 @@
       <section formArrayName="experience">
         <div class="flex justify-between items-center border-b pb-2 mb-4">
           <h2 class="text-lg font-semibold text-gray-800">Experience</h2>
-          <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition">
+          <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition" (click)="toggleVisibility('experience')">
             + Add Experience
           </button>
         </div>
@@ -172,6 +172,38 @@
             </div>
           </div>
         </div>
+        @if(!experienceVisibility){
+          <!-- <h1 style="font-size:100px">HECK YEAH THIS IS WORKING</h1> -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Company</label>
+              <input type="text" class="input-style border border-dark" [(ngModel)]="exp[0].company" [ngModelOptions]="{standalone: true}">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Job Title</label>
+              <input type="text" class="input-style border border-dark" [(ngModel)]="exp[0].job_title" [ngModelOptions]="{standalone: true}">
+            </span>
+            
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Duration</label>
+              <input type="text" class="input-style border border-dark" [(ngModel)]="exp[0].duration" [ngModelOptions]="{standalone: true}">
+            </span>
+            <div class="md:col-span-2 flex flex-col gap-2">
+              <label class="text-sm font-semibold text-gray-700">Responsibilities</label>
+              
+                <div class="flex gap-2">
+                  <input type="text"  class="input-style flex-1 border border-dark" placeholder="Achievement/Task" [(ngModel)]="exp_Description" [ngModelOptions]="{standalone: true}">
+                  <button type="button" class="text-red-400 hover:text-red-600">×</button>
+                </div>
+              
+              <button type="button"  class="text-xs text-indigo-500 text-left mt-1">
+                + Add Point
+              </button>
+            </div> 
+
+          </div>
+          <button class="border border-dark py-1 px-3" (click)="saveNewExperience()">Save</button>
+        }
       </section>
 
 

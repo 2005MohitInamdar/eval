@@ -99,7 +99,7 @@ import { Routes } from "@angular/router";
 import { UploadResume } from "./components/user_Onboarding/upload-resume/upload-resume";
 import { ConfirmResume } from "./components/user_Onboarding/confirm-resume/confirm-resume";
 export const routes: Routes =  [
-  {path: '', redirectTo: 'uploadResume', pathMatch:'full'}, 
+  {path: '', redirectTo: 'ConfirmResume', pathMatch:'full'}, 
   {path: 'uploadResume', component: UploadResume, title: 'upload resume page'},
   {path: 'ConfirmResume', component: ConfirmResume, title: 'confirm resume page'}
 ]

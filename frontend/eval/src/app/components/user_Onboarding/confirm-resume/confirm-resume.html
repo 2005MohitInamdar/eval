@@ -1,1 +1,237 @@
-<h1>Resume Details</h1>
+<div class="min-h-screen bg-gray-50 p-8">
+  <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
+    
+    <div class="bg-indigo-600 p-6 text-white">
+      <h1 class="text-2xl font-bold">Confirm Resume</h1>
+      <p class="text-indigo-100 text-sm">Fill in your details to generate your professional CV</p>
+    </div>
+
+    <form [formGroup]="resume" class="p-8 space-y-8">
+      
+      <section>
+        <h2 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Personal Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <span class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-600">Full Name</label>
+            <input type="text" placeholder="John Doe" formControlName="name" class="input-style">
+          </span>
+          <span class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-600">Email Address</label>
+            <input type="email" placeholder="john@example.com" formControlName="email" class="input-style">
+          </span>
+          <span class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-600">Phone Number</label>
+            <input type="text" placeholder="+1 234 567 890" formControlName="phone" class="input-style">
+          </span>
+          <span class="flex flex-col gap-1">
+            <label class="text-sm font-medium text-gray-600">Location</label>
+            <input type="text" placeholder="New York, USA" formControlName="location" class="input-style">
+          </span>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+        <span class="flex flex-col gap-1">
+          <label class="text-xs font-bold uppercase text-gray-400">LinkedIn</label>
+          <input type="text" placeholder="URL" formControlName="linkedin_url" class="input-style">
+        </span>
+        <span class="flex flex-col gap-1">
+          <label class="text-xs font-bold uppercase text-gray-400">GitHub</label>
+          <input type="text" placeholder="URL" formControlName="github_url" class="input-style">
+        </span>
+        <span class="flex flex-col gap-1">
+          <label class="text-xs font-bold uppercase text-gray-400">Portfolio</label>
+          <input type="text" placeholder="URL" formControlName="portfolio_url" class="input-style">
+        </span>
+      </section>
+
+      <section formArrayName="education">
+        <div class="flex justify-between items-center border-b pb-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-800">Education</h2>
+          <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition" (click)="toggleVisibility('education')">
+            + Add Education
+          </button>
+        </div>
+
+        <div *ngFor="let eduGroup of educationArray.controls; let i = index" [formGroupName]="i"
+              class="mb-6 p-4 border border-gray-200 rounded-xl relative hover:border-indigo-300 transition">
+          <span class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-indigo-500">Entry #{{ i + 1 }}</span>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Institution</label>
+              <input type="text" formControlName="institution" class="input-style" placeholder="University Name">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Degree</label>
+              <input type="text" formControlName="degree" class="input-style" placeholder="B.S. Computer Science">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Percentage / CGPA</label>
+              <input type="number" formControlName="percentage_or_cgpa" class="input-style">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Year of Passing</label>
+              <input type="text" formControlName="year_of_passing" class="input-style" placeholder="2024">
+            </span>
+          </div>
+        </div>
+         @if(!educationVisibility){        
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Institution</label>
+              <input type="text" class="input-style" placeholder="University Name" [(ngModel)]="edu[0].newInstitution" [ngModelOptions]="{standalone: true}">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Degree</label>
+              <input type="text" class="input-style" placeholder="B.S. Computer Science" [(ngModel)]="edu[0].newDegree" [ngModelOptions]="{standalone: true}">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Percentage / CGPA</label>
+              <input type="number" class="input-style" [(ngModel)]="edu[0].newMarks" [ngModelOptions]="{standalone: true}">
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Year of Passing</label>
+              <input type="text" class="input-style" placeholder="2024" [(ngModel)]="edu[0].newPassingYear"[ngModelOptions]="{standalone: true}">
+            </span>
+          </div>
+        <!-- } -->
+        } 
+      </section>
+
+      <section class="flex justify-between items-center border-b pb-2 mb-4">
+        <div>
+        <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition"
+        (click)="toggleVisibility('projects')">
+            + Add Project
+          </button>
+          <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Projects
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            @for(proj of resume.get('projects')?.value; track $index){
+              <div class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+                {{proj}}
+              </div>
+            }
+
+            @if(!projectsVisibility){
+              <div>
+                <input type="text" placeholder="Enter Project details" class="border border-dark" [(ngModel)]="newProject" [ngModelOptions]="{standalone: true}">
+                <button class="border border-dark py-1 px-2" (click)="saveNewData('projects', newProject)">Save</button>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+
+
+      <section formArrayName="experience">
+        <div class="flex justify-between items-center border-b pb-2 mb-4">
+          <h2 class="text-lg font-semibold text-gray-800">Experience</h2>
+          <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition">
+            + Add Experience
+          </button>
+        </div>
+
+        <div *ngFor="let expGroup of experienceArray.controls; let i = index" [formGroupName]="i"
+            class="mb-6 p-4 border border-gray-200 rounded-xl relative hover:border-indigo-300 transition">
+          
+          <span class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-indigo-500">Entry #{{ i + 1 }}</span>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Company</label>
+              <input type="text" formControlName="company" class="input-style">
+            </span>
+
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Job Title</label>
+              <input type="text" formControlName="job_title" class="input-style">
+            </span>
+
+            <span class="flex flex-col gap-1">
+              <label class="text-sm text-gray-600">Duration</label>
+              <input type="text" formControlName="duration" class="input-style">
+            </span>
+
+            <div class="md:col-span-2 flex flex-col gap-2" formArrayName="description">
+              <label class="text-sm font-semibold text-gray-700">Responsibilities</label>
+              
+              @for (desc of nestedFieldArray(i).controls; track $index; let j = $index) {
+                <div class="flex gap-2">
+                  <input type="text" [formControlName]="j" class="input-style flex-1" placeholder="Achievement/Task">
+                  <button type="button" (click)="nestedFieldArray(i).removeAt(j)" class="text-red-400 hover:text-red-600">×</button>
+                </div>
+              }
+              
+              <button type="button"  class="text-xs text-indigo-500 text-left mt-1">
+                + Add Point
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+        <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition"
+        (click)="toggleVisibility('soft_skills')">
+            + Add Soft Skill
+          </button>
+          <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Soft Skills
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            @for(skill of resume.get('soft_skills')?.value; track $index){
+              <div class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+                {{skill}}
+              </div>
+            }
+            @if(!isDisabled){
+              <div>
+                <input type="text" class="border-dark border" [(ngModel)]="newSoftSkill" placeholder="Enter comma seperated value" [ngModelOptions]="{standalone: true}">
+                <button class="border border-black py-2 px-3" (click)="saveNewData('soft_skills', newSoftSkill)">
+                  Save
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div>
+            <button type="button" class="text-sm bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full hover:bg-indigo-100 transition" (click)="toggleVisibility('technical_skills')">
+                + Add Technical Skill
+          </button>
+          <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 bg-green-500 rounded-full"></span> Technical Skills
+          </h3>
+          <div class="flex flex-wrap gap-2">
+            @for(tech_skill of resume.get('technical_skills')?.value; track $index){
+              <div class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+                {{tech_skill}}
+              </div>
+            }
+            @if(!techSkillVisibility){
+              <div>
+                <input type="text" [(ngModel)]="newTechSkill" [ngModelOptions]="{standalone: true}" class="border border-dark" placeholder="Enter comma seperated values">
+                <button (click)="saveNewData('technical_skills', newTechSkill)" class="border py=1 px-2" >Save</button>
+              </div>
+            }
+          </div>
+        </div>
+      </section>
+
+      <button
+        type="submit"
+        class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition"
+        (click)="confirmResumeData()"
+      >
+        Confirm Data
+      </button>
+
+    </form>
+  </div>
+</div>

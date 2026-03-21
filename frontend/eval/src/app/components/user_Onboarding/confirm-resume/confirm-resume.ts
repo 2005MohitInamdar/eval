@@ -1,113 +1,218 @@
-// import { Component, PLATFORM_ID, inject } from '@angular/core';
-// import { isPlatformBrowser, CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms'; // 1. Import this
-// @Component({
-//   selector: 'app-confirm-resume',
-//   standalone: true,
-//   imports: [CommonModule, FormsModule],
-//   templateUrl: './confirm-resume.html',
-//   styleUrls: ['./confirm-resume.scss'],
-// })
-// export class ConfirmResume {
-//   private platformid = inject(PLATFORM_ID)
-//   resume_data!: any
-//   flat_display_list: { label: string, value: string }[] = [];
-//   flattenData(obj: any, parentKey = ''): { label: string, value: string }[] {
-//     let results: { label: string, value: string }[] = [];
-
-//     for (const key in obj) {
-//       if (!obj.hasOwnProperty(key)) continue;
-
-//       // Construct a clean label (e.g., "education_0_degree")
-//       const displayLabel = parentKey ? `${parentKey}_${key}` : key;
-//       const value = obj[key];
-
-//       if (Array.isArray(value)) {
-//         // If it's an array, we "unroll" it
-//         value.forEach((item, index) => {
-//           if (typeof item === 'object') {
-//             results = results.concat(this.flattenData(item, `${displayLabel}_${index}`));
-//           } else {
-//             results.push({ label: `${displayLabel}_${index}`, value: String(item) });
-//           }
-//         });
-//       } else if (typeof value === 'object' && value !== null) {
-//         // If it's a nested object, recurse deeper
-//         results = results.concat(this.flattenData(value, displayLabel));
-//       } else {
-//         // Base case: It's a string/number, just add it
-//         results.push({ label: displayLabel, value: String(value || 'N/A') });
-//       }
-//     }
-//     return results;
-//   }
-//   constructor(){
-//     if(isPlatformBrowser(this.platformid)){
-//       // console.log("Get item: ")
-      
-//       const raw_data = localStorage.getItem("resume_data")
-//       if(raw_data){
-//         const parsed_data = JSON.parse(raw_data)
-//         this.resume_data = parsed_data.data
-//         // console.log(this.resume_data.data.full_name)
-//         if (this.resume_data) {
-//           this.flat_display_list = this.flattenData(this.resume_data);
-//         }
-
-//         console.log(this.flat_display_list)
-        
-//       }
-//     }
-//   } 
-//   saveAndProceed(){}
-// }
-
-
-
-// --------------------------------------------------------------------------------------------------------------
 import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // 1. Import this
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms'; 
 
-
+interface ResumeEntries {
+  full_name: string;
+  email: string;
+  phone: string;
+  location: string;
+  soft_skills: string[];
+  technical_skills: string[];
+  projects: any[]; 
+  experience: any[];
+  education: any[]; 
+  skills: any[]; 
+  linkedin_url: string | null;
+  github_url: string | null;
+  portfolio_url: string | null;
+}
 
 
 @Component({
   selector: 'app-confirm-resume',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule ],
   templateUrl: './confirm-resume.html',
   styleUrls: ['./confirm-resume.scss'],
 })
-export class ConfirmResume{
+export class ConfirmResume implements OnInit{
   private platformid = inject(PLATFORM_ID)
-  resume_data!: any
-  flat_display_list: any = [];
+  isDisabled:boolean=true
+  techSkillVisibility:boolean = true
+  projectsVisibility:boolean = true
+  educationVisibility:boolean=true
+  raw_data!: any
+  resume_data!:ResumeEntries
+  newSoftSkill:string = ""
+  newTechSkill:string = ""
+  newProject:string = ""
 
+  edu = [
+    {
+      newInstitution: "",
+      newDegree: "",
+      newMarks: "",
+      newPassingYear: ""
+    }
+  ]
+  
+  resume = new FormGroup ({
+    name: new FormControl(""),
+    email: new FormControl(),
+    phone: new FormControl(),
+    location: new FormControl(),
+    soft_skills: new FormArray([]),
+    technical_skills: new FormArray([]),
+    experience: new FormArray([]),
+    projects: new FormArray([]),
+    education: new FormArray([]), 
+    linkedin_url: new FormControl(),
+    github_url: new FormControl(),
+    portfolio_url: new FormControl()
+  })
+
+
+  ngOnInit():void{
+    if(isPlatformBrowser(this.platformid)){
+      this.raw_data = localStorage.getItem("resume_data")
+      const parsedData = JSON.parse(this.raw_data)
+      const placeholder_data = parsedData.data
+      this.resume_data = placeholder_data as ResumeEntries;
+      
+      console.log(this.resume_data.experience[0].duration)
+
+      this.setEducation(this.resume_data.education);
+      this.setFieldValue("technical_skills", this.resume_data.skills[0].technical_skills)
+      this.setFieldValue("soft_skills", this.resume_data.skills[0].soft_skills)
+      this.setFieldValue("projects", this.resume_data.projects)
+      this.setExperience(this.resume_data.experience)
+      
+      this.resume.patchValue({
+        name: this.resume_data.full_name,
+        email: this.resume_data.email,
+        phone: this.resume_data.phone,
+        location: this.resume_data.location,
+        linkedin_url: this.resume_data.linkedin_url,
+        github_url: this.resume_data.github_url,
+        portfolio_url: this.resume_data.portfolio_url
+      })
+    }
+  }
+  
+  constructor(){} 
+
+  fieldArray(field: string):FormArray {
+    return this.resume.get(field) as FormArray;
+  }
+
+  setFieldValue(field: string, data: string[]) {
+    const targetField = this.fieldArray(field)
+
+    data.forEach(d => {
+      targetField.push(new FormControl(d))
+    })
+  }
+
+
+  get educationArray(): FormArray {
+    return this.resume.get('education') as FormArray;
+  }
+
+  createEducationGroup(edu?: any): FormGroup {
+    return new FormGroup({
+      institution:       new FormControl(edu?.institution ?? ''),
+      degree:            new FormControl(edu?.degree ?? ''),
+      percentage_or_cgpa: new FormControl(edu?.percentage_or_cgpa ?? null),
+      year_of_passing:   new FormControl(edu?.year_of_passing ?? ''),
+    });
+  }
 
   
-  constructor(){
-  } 
+  setEducation(educationData: any[]) {
+    this.educationArray.clear(); 
+
+    educationData.forEach(edu => {
+      this.educationArray.push(this.createEducationGroup(edu));
+    });
+  }
+
+  nestedFieldArray(expIndex: number): FormArray {
+    const expGroup = this.experienceArray.at(expIndex) as FormGroup;
+    return expGroup.get('description') as FormArray;
+  }
+
+  setNestedFieldValue(expIndex: number, data: string[]) {
+  const targetField = this.nestedFieldArray(expIndex);
+  
+    data.forEach(d => {
+      targetField.push(new FormControl(d));
+    });
+  }
 
 
-  // flattenData(obj:any):FlattenedItem[]{
-  //   const result: FlattenedItem[] = [];
-  //   for(const [outerkey, outervalue] of Object.entries(obj)){
-  //     // console.log(`${outerkey}:${outervalue}`)
-  //     result.push({ key: outerkey, value: outervalue });
-  //     if(Array.isArray(outervalue)){
-  //       for(const x of outervalue){
-  //         for(const [key, value] of Object.entries(x)){
-  //           // console.log(`${key}:${value}`)
-  //           result.push({ key, value });
-  //         }
-  //       }
-  //     }
-  //   }
-  //   return result
-  // }
+  get experienceArray(): FormArray {
+    return this.resume.get('experience') as FormArray;
+  }
+  
+ 
 
+  createExperienceGroup(exp?: any): FormGroup {
+    const description = exp?.description
+    console.log(description)
+    return new FormGroup({
+      company: new FormControl(exp?.company ?? ''),
+      duration: new FormControl(exp?.duration ?? ''),
+      job_title:   new FormControl(exp?.job_title ?? ''),
+      description:   new FormArray([]),
+    });
+  }
 
+  setExperience(experienceData: any[]) {
+    experienceData.forEach((exp, index) => {
+    this.experienceArray.push(this.createExperienceGroup(exp));
 
-  saveAndProceed(){}
+      if (exp.description && Array.isArray(exp.description)) {
+        this.setNestedFieldValue(index, exp.description);
+      }
+    });
+  }
+
+  
+  toggleVisibility(field:string){
+    switch(field){
+      case "soft_skills":
+        this.isDisabled = !this.isDisabled;
+        break;
+        case "technical_skills":
+          this.techSkillVisibility = !this.techSkillVisibility
+        break;
+      case "projects":
+        this.projectsVisibility = !this.projectsVisibility
+        break;  
+      case "education":
+        this.educationVisibility = !this.educationVisibility
+        break;  
+
+    }
+  }
+  
+  
+  saveNewData(field:string, data:string){
+    if(field === "projects"){
+      const projArray = this.fieldArray("projects")
+      projArray.push(new FormControl(data))
+    }else{
+      const raw_Array = data.split(",");
+      const updated_Array = raw_Array.map(s => s = s.trim());
+      this.setFieldValue(field, updated_Array);
+    }
+
+    switch(field){
+      case "soft_skills":
+        this.newSoftSkill = "";
+        this.isDisabled = !this.isDisabled;
+        break;
+      case "technical_skills":
+        this.newTechSkill = ""
+        this.techSkillVisibility = !this.techSkillVisibility
+        break;
+      case "projects":
+        this.newProject = ""
+        this.projectsVisibility = !this.projectsVisibility
+        break;
+    }
+  }
+
+  confirmResumeData(){}
 }

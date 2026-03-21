@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { NavTop } from '../../navbar_components/nav-top/nav-top';
 import { Router } from '@angular/router';
 import { Supabase } from '../../../services/supabase/supabase';
-import { syncResponse } from '../../../services/resume/user-resume';
 @Component({
   selector: 'app-upload-resume',
   standalone:true,
@@ -84,6 +83,7 @@ export class UploadResume implements OnInit{
         next: (res:any) => {
           const response_data = res.extracted_resume_details
           localStorage.setItem("resume_data", JSON.stringify(response_data))
+          this.completion_route()
         },
         error: (err) => {
           console.log("unSuccessful: ", err)
@@ -93,10 +93,12 @@ export class UploadResume implements OnInit{
     }
   }
 
+  completion_route(){
+    this.router.navigate(['/ConfirmResume'])
+  }
 
   submitResume(){
     console.log("File selected", this.fileName)
     this.fileSupabaseUpload(this.selectedFile)
-
   } 
 }

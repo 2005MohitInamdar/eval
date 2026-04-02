@@ -1,7 +1,7 @@
 import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms'; 
-
+import { Router } from '@angular/router';
 interface ResumeEntries {
   full_name: string;
   email: string;
@@ -28,7 +28,7 @@ interface ResumeEntries {
 })
 export class ConfirmResume implements OnInit{
   private platformid = inject(PLATFORM_ID)
-
+  private router = inject(Router);
   isDisabled:boolean=true
   techSkillVisibility:boolean = true
   projectsVisibility:boolean = true
@@ -41,6 +41,8 @@ export class ConfirmResume implements OnInit{
   newTechSkill:string = ""
   newProject:string = ""
   exp_Description:string = ""
+  activeAddPointIndex: number | null = null;
+  newDescriptionPoint: string = "";
 
 
   edu = [
@@ -107,6 +109,8 @@ export class ConfirmResume implements OnInit{
   
   constructor(){} 
 
+
+  
   fieldArray(field: string):FormArray {
     return this.resume.get(field) as FormArray;
   }
@@ -191,19 +195,33 @@ export class ConfirmResume implements OnInit{
     this.experienceArray.push(this.createExperienceGroup(exp));
 
       if (exp.description && Array.isArray(exp.description)) {
-        this.setNestedFieldValue(index, exp.description);
+        const newIndex = this.experienceArray.length - 1;
+        this.setNestedFieldValue(newIndex, exp.description);
       }
     });
   }
-  saveNewExperience(){
 
+
+
+  saveNewExperience(){
     const fixed_desc_data = this.exp_Description.split(",")
     const final_desc_data = fixed_desc_data.map(desc => desc.trim())
     if(final_desc_data){
       this.exp[0].description = final_desc_data
+      this.setExperience(this.exp)
+
+      this.exp = [
+        {
+          company: "",
+          description: [] as string[],
+          job_title: "",
+          duration: "",
+        }
+      ]
+
+      this.experienceVisibility = !this.experienceVisibility;
     }
-    console.log(typeof this.exp_Description)
-    this.setExperience(this.exp)
+
   }
 
 
@@ -255,6 +273,35 @@ export class ConfirmResume implements OnInit{
   } 
 
 
+  removeExperience(index:number){
+    this.experienceArray.removeAt(index);
+  }
 
-  confirmResumeData(){}
+  removeEducation(index:number){
+    this.educationArray.removeAt(index)
+  }
+
+
+
+
+  addDescriptionPoint(expIndex: number) {
+    this.activeAddPointIndex = expIndex;
+  }
+
+  confirmDescriptionPoint(expIndex: number) {
+    if (this.newDescriptionPoint.trim()) {
+      this.nestedFieldArray(expIndex).push(new FormControl(this.newDescriptionPoint.trim()));
+      this.newDescriptionPoint = "";
+    }
+    this.activeAddPointIndex = null;
+  }
+  
+
+  confirmResumeData(){
+    if(this.resume.valid){
+      const raw_resume_data = this.resume.getRawValue();
+      localStorage.setItem("resume_data", JSON.stringify(raw_resume_data))
+      this.router.navigate(['/SelectionPage'])
+    }
+  }
 }

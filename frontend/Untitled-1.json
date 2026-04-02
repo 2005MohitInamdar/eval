@@ -1,0 +1,112 @@
+
+{
+    "data": {
+        "full_name": "Ved Dhanokar",
+        "email": "veddhanokat@gmail.com",
+        "phone": "+91-9356761880",
+        "location": "Aurangabad, Maharashtra, India",
+        "projects": [
+            "Google Solution Challenge – Cropify App Developer (Flutter, Dart, Firebase): Collaborated with a team to build Cropify, an agri-based mobile app using Flutter, Dart, and Firebase. Developed clean UI screens and implemented real-time database and authentication features. Focused on solving real-world problems with mobile-first, scalable solutions.",
+            "Engineering Exploration Projects – MGM University: Built a soldering pen and a touchless water dispenser tap as part of hands-on engineering coursework. Worked with Arduino Uno, LM35 temperature sensor, IR sensor, 16x2 LCD, and basic PCB wiring. Gained hands-on experience in circuit design, sensor integration, and microcontroller programming.",
+            "Password Saver & YouTube Clone: Built a basic password manager and a YouTube UI clone during full-stack web development learning. Used HTML, CSS, JavaScript, and explored Node.js for backend functionality.",
+            "AI Face Classifier – Deep Learning Project (Python, PyTorch, OpenCV): Built a face image classifier to distinguish between real and AI-generated faces using transfer learning on ResNet-18. Preprocessed a custom dataset using PyTorch DataLoader with resizing, flipping, and normalization. Trained the model with cross-entropy loss and Adam optimizer. Deployed model for batch inference and tested on unseen data using OpenCV."
+        ],
+        "education": [
+            {
+                "institution": "Institute of Information and Communication Technology (IICT), MGM University",
+                "degree": "B.Tech Information Technology",
+                "percentage_or_cgpa": "8.47 CGPA",
+                "year_of_passing": "June 2027"
+            },
+            {
+                "institution": "M.S.P Mandal's Shivchhatrapati College",
+                "degree": "Higher Secondary School | Science (PCM + CS)",
+                "percentage_or_cgpa": "65.50%",
+                "year_of_passing": "May 2023"
+            },
+            {
+                "institution": "St. Lawrence High School",
+                "degree": "Secondary School",
+                "percentage_or_cgpa": null,
+                "year_of_passing": "2021"
+            }
+        ],
+        "experience": [
+            {
+                "job_title": "2nd Runner-Up, IEEE C Quest",
+                "company": "IEEE C Quest",
+                "duration": "Feb 2024",
+                "description": [
+                    "Secured 3rd position in a department-level competitive coding event",
+                    "Solved logic-based problems using C under time constraints"
+                ]
+            },
+            {
+                "job_title": "Participant",
+                "company": "IIT Bombay Techfest",
+                "duration": "Dec 2024",
+                "description": [
+                    "Attended IIT Bombay Techfest and explored latest innovations in AI and tech",
+                    "Worked hands-on with Ollama to run local LLMs and experimented with RAG models",
+                    "Gained exposure to prompt engineering, LLM workflows, and real-world AI tools"
+                ]
+            }
+        ],
+        "skills": [
+            {
+                "soft_skills": [
+                    "problem solving",
+                    "logic building",
+                    "adaptability",
+                    "effective in team projects",
+                    "collaborative work",
+                    "fast learner",
+                    "good time management skills"
+                ],
+                "technical_skills": [
+                    "Python",
+                    "C",
+                    "C++",
+                    "Java",
+                    "HTML",
+                    "CSS",
+                    "JavaScript",
+                    "React",
+                    "Node.js",
+                    "SQL",
+                    "PyTorch",
+                    "OpenCV",
+                    "NumPy",
+                    "Matplotlib",
+                    "torchvision",
+                    "Data Structures",
+                    "Algorithms",
+                    "Object-Oriented Programming (OOP)",
+                    "Time & Space Complexity",
+                    "VS Code",
+                    "Android Studio",
+                    "Arduino IDE",
+                    "Git",
+                    "GitHub"
+                ]
+            }
+        ],
+        "linkedin_url": "https://www.linkedin.com/in/ved-dhanokar-b0351029b/",
+        "github_url": null,
+        "portfolio_url": null
+    },
+    "extraction_agent_id": "efab1c7a-75c5-41a7-9998-034e3d42f77f",
+    "extraction_metadata": {
+        "field_metadata": {},
+        "usage": {
+            "num_pages_extracted": 1,
+            "num_document_tokens": 1007,
+            "num_output_tokens": 903
+        },
+        "parse_job_id": "9d32d900-807d-4cb6-ab6e-60b834205338"
+    },
+    "run_id": "80a5c849-c20e-48aa-a733-84a7a1a6a271"
+}
+
+
+

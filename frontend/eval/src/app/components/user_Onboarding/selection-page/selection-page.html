@@ -1,3 +1,16 @@
-<h1>selection-page works!</h1>
-<p>Keep one skeletion structure here form</p>
-<p>Load the company names and roles from a service named selectCompany_Roles</p>
+<div>
+    <div>
+        <span>
+            <h1>Company Name: </h1>
+            <input type="text" [(ngModel)]="desired_company" class="border" required>
+        </span>
+        <span>
+            <h1>Role: </h1>
+            <input type="text" [(ngModel)]="desired_role" class="border" required>
+        </span>
+    </div>
+    <button class="border px-1 py-2 cursor-pointer" (click)="submit_desired_selection()">
+    <!-- <button class="border px-1 py-2 cursor-pointer" (click)="submit_desired_selection()" [disabled]="!desired_company || !desired_role"> -->
+        Save
+    </button>
+</div>

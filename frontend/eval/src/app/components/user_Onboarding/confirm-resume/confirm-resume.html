@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-gray-50 p-8">
+<div class="min-h-screen bg-gray-50 p-8 ">
   <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
     
     <div class="bg-indigo-600 p-6 text-white">
@@ -9,7 +9,7 @@
     <form [formGroup]="resume" class="p-8 space-y-8">
       
       <section>
-        <h2 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-4">Personal Information</h2>
+        <h2 class="text-lg font-semibold text-white-800 border-b pb-2 mb-4">Personal Information</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <span class="flex flex-col gap-1">
             <label class="text-sm font-medium text-gray-600">Full Name</label>
@@ -56,6 +56,11 @@
         <div *ngFor="let eduGroup of educationArray.controls; let i = index" [formGroupName]="i"
               class="mb-6 p-4 border border-gray-200 rounded-xl relative hover:border-indigo-300 transition">
           <span class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-indigo-500">Entry #{{ i + 1 }}</span>
+
+            <button type="button" (click)="removeEducation(i)" 
+              class="absolute -top-3 right-4 bg-white px-2 text-xs font-bold text-red-500 hover:text-red-700">
+              ✕ Remove
+            </button>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <span class="flex flex-col gap-1">
@@ -109,9 +114,13 @@
             <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Projects
           </h3>
           <div class="flex flex-wrap gap-2">
-            @for(proj of resume.get('projects')?.value; track $index){
+            @for(proj of resume.get('projects')?.value; track $index; let i=$index){
               <div class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
                 {{proj}}
+                <button type="button" (click)="this.fieldArray('projects').removeAt($index)" 
+                  class="bg-white px-2 text-xs font-bold text-red-500" style="font-size:100">
+                  ✕ Remove
+                </button>
               </div>
             }
 
@@ -139,6 +148,10 @@
             class="mb-6 p-4 border border-gray-200 rounded-xl relative hover:border-indigo-300 transition">
           
           <span class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-indigo-500">Entry #{{ i + 1 }}</span>
+            <button type="button" (click)="removeExperience(i)" 
+              class="absolute -top-3 right-4 bg-white px-2 text-xs font-bold text-red-500 hover:text-red-700">
+              ✕ Remove
+            </button>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <span class="flex flex-col gap-1">
@@ -166,9 +179,28 @@
                 </div>
               }
               
-              <button type="button"  class="text-xs text-indigo-500 text-left mt-1">
+              <!-- <button type="button"  class="text-xs text-indigo-500 text-left mt-1" (click)="addDescriptionPoint(i)">
                 + Add Point
-              </button>
+              </button> -->
+
+              @if(activeAddPointIndex === i){
+  <div class="flex gap-2 mt-1">
+    <input type="text" class="input-style flex-1" placeholder="Achievement/Task" 
+      [(ngModel)]="newDescriptionPoint" [ngModelOptions]="{standalone: true}">
+    <button type="button" (click)="confirmDescriptionPoint(i)" 
+      class="text-xs bg-indigo-500 text-white px-3 py-1 rounded-lg hover:bg-indigo-600">
+      Confirm
+    </button>
+    <button type="button" (click)="activeAddPointIndex = null; newDescriptionPoint = ''" 
+      class="text-xs text-red-500 hover:text-red-700">
+      ✕
+    </button>
+  </div>
+}
+
+<button type="button" (click)="addDescriptionPoint(i)" class="text-xs text-indigo-500 text-left mt-1">
+  + Add Point
+</button>
             </div>
           </div>
         </div>
@@ -217,9 +249,12 @@
             <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Soft Skills
           </h3>
           <div class="flex flex-wrap gap-2">
-            @for(skill of resume.get('soft_skills')?.value; track $index){
+            @for(skill of resume.get('soft_skills')?.value; track $index; let i=$index){
               <div class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
                 {{skill}}
+              <button class="w-6 h-6 text-red-500" (click)="fieldArray('soft_skills').removeAt(i)">
+                    x
+              </button>
               </div>
             }
             @if(!isDisabled){
@@ -241,9 +276,12 @@
             <span class="w-2 h-2 bg-green-500 rounded-full"></span> Technical Skills
           </h3>
           <div class="flex flex-wrap gap-2">
-            @for(tech_skill of resume.get('technical_skills')?.value; track $index){
+            @for(tech_skill of resume.get('technical_skills')?.value; track $index; let i=$index){
               <div class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
                 {{tech_skill}}
+                <button class="w-6 h-6  text-red-500" (click)="fieldArray('technical_skills').removeAt(i)">
+                    x
+              </button>
               </div>
             }
             @if(!techSkillVisibility){

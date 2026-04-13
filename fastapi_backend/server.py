@@ -7,7 +7,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException, status, Request, Depends
 from fastapi.responses import StreamingResponse
-from app import run_chain
+# from app import run_chain
 from resume_evaluation.evaluation import resume_evaluation
 from supabase_integration.auth import supabase
 from urllib.parse import unquote
@@ -58,6 +58,12 @@ class uploadedResume(BaseModel):
     file_name:str
     mime_type:str
 
+
+class interview(BaseModel):
+    interview_type:str
+    interview_role:str
+
+
 @app.get("/health")
 def home():
     return {"message": "Backend health 🟢"}
@@ -102,6 +108,12 @@ async def analyzeResume(payload: uploadedResume):
         "path_received": payload.file_path,
         "extracted_resume_details": structured_resposnse
     }
+
+
+@app.post("/mock_interview")
+def mock_interview(interview_data: interview):
+    print("interview data: ", interview_data)
+    return {"Message" : "Mission completed", "data" : interview_data}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

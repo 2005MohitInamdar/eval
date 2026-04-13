@@ -10,6 +10,7 @@ client = LlamaCloud(api_key=os.getenv("LLAMAPARSE_KEY"))
 if(not client):
     print("Client not initialized")
 
+
 class EducationEntry(BaseModel):
     institution: str
     degree: Optional[str]

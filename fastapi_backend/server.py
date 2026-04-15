@@ -12,7 +12,8 @@ from resume_evaluation.evaluation import resume_evaluation
 from supabase_integration.auth import supabase
 from urllib.parse import unquote
 from resume_evaluation.resume_extraction import resume_Parser
-app = FastAPI()
+from mock_interview.interview import run_chain
+app = FastAPI() 
 
 app.add_middleware(
     CORSMiddleware,
@@ -111,9 +112,15 @@ async def analyzeResume(payload: uploadedResume):
 
 
 @app.post("/mock_interview")
-def mock_interview(interview_data: interview):
+async def mock_interview(interview_data: interview):
     print("interview data: ", interview_data)
-    return {"Message" : "Mission completed", "data" : interview_data}
+    # output = await run_chain(interview_data.interview_type, interview_data.interview_role)
+    # print(output)
+    # return {"Message" : "Mission completed", "data" : interview_data}
+    return StreamingResponse(
+            run_chain(interview_data.interview_type, interview_data.interview_role), 
+            media_type="text/event-stream"
+        )
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

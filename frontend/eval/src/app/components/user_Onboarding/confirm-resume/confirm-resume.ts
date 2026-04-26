@@ -85,7 +85,7 @@ export class ConfirmResume implements OnInit{
     if(isPlatformBrowser(this.platformid)){
       this.raw_data = localStorage.getItem("resume_data")
       const parsedData = JSON.parse(this.raw_data)
-      const placeholder_data = parsedData.data
+      const placeholder_data = parsedData
       this.resume_data = placeholder_data as ResumeEntries;
       
 
@@ -108,7 +108,7 @@ export class ConfirmResume implements OnInit{
   }
   
   constructor(){} 
-
+  
 
   
   fieldArray(field: string):FormArray {
@@ -191,6 +191,10 @@ export class ConfirmResume implements OnInit{
   }
 
   setExperience(experienceData: any[]) {
+    if (!experienceData) {
+      console.warn("No experience data found!");
+      return;
+    }  
     experienceData.forEach((exp, index) => {
     this.experienceArray.push(this.createExperienceGroup(exp));
 

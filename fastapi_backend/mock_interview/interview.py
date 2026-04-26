@@ -20,6 +20,7 @@ class State(TypedDict, total=False):
     interview_role:str
     checking_value:str
     continue_or_not:str
+    val: str
 
 async def check_data(state:State) -> State:
     """Check if the written role is actually a valid role or fake"""
@@ -50,7 +51,7 @@ def should_continue(state : State) -> str:
 
 def continue_node(state:State) -> State:
     """workd after confirming data"""
-    print("Yay")
+    return {"val": "Yes its working!"}
 
 
 workflow = StateGraph(State)
@@ -74,11 +75,18 @@ async def run_chain(interview_type:str, interview_role:str):
     async for state_update in chain.astream_events({"interview_type": interview_type, "interview_role":interview_role}, version="v2"):
         updates = state_update["event"]
         name = state_update.get("name")
+        # print(state_update)
         if(updates == "on_chat_model_stream"):
             content = state_update["data"]["chunk"].content
             if(content):
-                print(content)
-                
+                yield f"data:{content}\n\n"
+        
+        if(updates == "on_chain_stream"):
+            chunk = state_update["data"].get("chunk")
+            if(chunk):
+                val = chunk.get("val")
+                print(val)
+
         if(updates == "on_chain_end") and name == "LangGraph":
             output = state_update["data"].get("output", {})
             if isinstance(output, dict):

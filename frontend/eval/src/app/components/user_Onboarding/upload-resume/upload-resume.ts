@@ -82,6 +82,7 @@ export class UploadResume implements OnInit{
       this.http.post('http://127.0.0.1:8000/uploadedResume', payload).subscribe({
         next: (res:any) => {
           const response_data = res.extracted_resume_details
+          console.log(JSON.stringify(response_data))
           localStorage.setItem("resume_data", JSON.stringify(response_data))
           this.completion_route()
         },

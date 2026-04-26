@@ -6,13 +6,16 @@ import { Supabase } from '../supabase/supabase';
 export class LoginService {
   supabaseService = inject(Supabase)
 
+
+  
   login(loginEmail:string, loginPassword:string){
     return this.supabaseService.supabase.auth.signInWithPassword({
       "email": loginEmail,
       "password": loginPassword
     })
   }
-
+  
+ 
   async loginWithGoogle(){
     console.log("Login with google: ")
     const {data, error} = await this.supabaseService.supabase.auth.signInWithOAuth({
@@ -23,5 +26,10 @@ export class LoginService {
         
       },
     })
+  }
+
+   async getCurrentUser(){
+    const {data: {user}} = await this.supabaseService.supabase.auth.getUser()
+    return user
   }
 }

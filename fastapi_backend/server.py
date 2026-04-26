@@ -7,12 +7,12 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import HTTPException, status, Request, Depends
 from fastapi.responses import StreamingResponse
-# from app import run_chain
 from resume_evaluation.evaluation import resume_evaluation
 from supabase_integration.auth import supabase
 from urllib.parse import unquote
 from resume_evaluation.resume_extraction import resume_Parser
 from mock_interview.interview import run_chain
+
 app = FastAPI() 
 
 app.add_middleware(
@@ -100,23 +100,22 @@ async def analyzeResume(payload: uploadedResume):
     try:
         source = await download_file(payload.file_path)
         structured_resposnse = await resume_Parser(source, payload.file_name)
-        print("structured_data: ", structured_resposnse.data)
+        print("structured_data: ", structured_resposnse)
+        return {
+            "status":"success",
+            "message": "metadata synched", 
+            "path_received": payload.file_path,
+            "extracted_resume_details": structured_resposnse
+        }
     except Exception as e:
         print(e)
-    return {
-        "status":"success",
-        "message": "metadata synched", 
-        "path_received": payload.file_path,
-        "extracted_resume_details": structured_resposnse
-    }
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/mock_interview")
 async def mock_interview(interview_data: interview):
     print("interview data: ", interview_data)
-    # output = await run_chain(interview_data.interview_type, interview_data.interview_role)
-    # print(output)
-    # return {"Message" : "Mission completed", "data" : interview_data}
+
     return StreamingResponse(
             run_chain(interview_data.interview_type, interview_data.interview_role), 
             media_type="text/event-stream"

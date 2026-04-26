@@ -1,6 +1,7 @@
 import { Component,inject,  ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
+import { LoginService } from '../../services/login_service/login-service';
 @Component({
   selector: 'app-mock-interview',
   standalone: true, 
@@ -9,6 +10,7 @@ import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./mock-interview.scss'],
 })
 export class MockInterview {
+  private loginService = inject(LoginService)
   private cdr = inject(ChangeDetectorRef)
   interview_type:string = "";
   displayed_text = ""
@@ -48,5 +50,10 @@ export class MockInterview {
 
         this.cdr.detectChanges();
       }
+  }
+
+   async currentUserSession(){
+    const currentUser = await this.loginService.getCurrentUser()
+    console.log("this is the current logged in user: ", currentUser);
   }
 }

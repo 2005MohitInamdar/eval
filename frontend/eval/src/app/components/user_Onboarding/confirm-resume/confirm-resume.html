@@ -178,10 +178,6 @@
                   <button type="button" (click)="nestedFieldArray(i).removeAt(j)" class="text-red-400 hover:text-red-600">×</button>
                 </div>
               }
-              
-              <!-- <button type="button"  class="text-xs text-indigo-500 text-left mt-1" (click)="addDescriptionPoint(i)">
-                + Add Point
-              </button> -->
 
               @if(activeAddPointIndex === i){
   <div class="flex gap-2 mt-1">
@@ -205,7 +201,6 @@
           </div>
         </div>
         @if(!experienceVisibility){
-          <!-- <h1 style="font-size:100px">HECK YEAH THIS IS WORKING</h1> -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <span class="flex flex-col gap-1">
               <label class="text-sm text-gray-600">Company</label>

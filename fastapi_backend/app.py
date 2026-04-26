@@ -72,7 +72,7 @@ async def node1(state:State) -> State:
 def should_continue(state:State) -> int:
     """This node checks if the count is less than 11"""
     if(state["count"] < 4):
-        print(f"Looping the question generator node count: {state["count"]}")
+        # print(f"Looping the question generator node count: {state["count"]}")
         return "loop"
     else:
         return "end_loop"

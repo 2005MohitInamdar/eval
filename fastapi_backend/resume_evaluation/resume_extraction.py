@@ -1,15 +1,27 @@
 import io
-from llama_cloud import LlamaCloud
-from dotenv import load_dotenv
 import os
+import uuid
+import asyncio
+import logging
+from dotenv import load_dotenv
+from fastapi import HTTPException
 from typing import Optional, List
-from pydantic import BaseModel, Field, HttpUrl
+from llama_cloud import LlamaCloud
+from llama_cloud import LlamaCloudError
+from pydantic import BaseModel, Field
+
 load_dotenv()
-client = LlamaCloud(api_key=os.getenv("LLAMAPARSE_KEY"))
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+
+client = LlamaCloud(api_key=os.getenv("LLAMA_CLOUD_API_KEY"))
+# print(dir(client))``
+files = client.files.list()
+
 
 if(not client):
     print("Client not initialized")
-
 
 class EducationEntry(BaseModel):
     institution: str
@@ -61,13 +73,43 @@ async def resume_Parser(fileBytes, fileName):
 
     file_obj = client.files.create( 
         file=file_tuple,
-        external_file_id=fileName,
+        # external_file_id=fileName,
+        external_file_id=str(uuid.uuid4()),
         purpose="extract"
     )
+    try:
+        job = client.extract.create(
+            file_input = file_obj.id,
+            configuration = {
+                "data_schema":  ResumeSchema.model_json_schema(),
+                "tier": "agentic"
+            },
+        )
 
-    result = client.extraction.extract(
-        file_id = file_obj.id,
-        config = {},
-        data_schema = ResumeSchema.model_json_schema()
-    )
-    return result
+        result = client.extract.wait_for_completion(job.id)
+        # result = client.extraction.extract(
+        #     file_id = file_obj.id,
+        #     config = {},
+        #     data_schema = ResumeSchema.model_json_schema()
+        # )
+        return result.extract_result
+    except LlamaCloudError as e:
+        logger.error(f"LlamaCloud error: {e}")
+        return {"status": "error", "message": "Extraction failed"}
+    except Exception as e:
+        logger.exception("Unexpected error")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+
+
+# async def test():
+#     file_path = "E:/resumes/ParthInamdar.pdf"
+
+#     with open(file_path, "rb") as f:
+#         file_bytes = f.read()
+
+#     result = await resume_Parser(file_bytes, "E:/resumes/ParthInamdar.pdf" )
+#     print(result)
+
+# asyncio.run(test())

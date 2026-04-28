@@ -3,7 +3,8 @@ import { Component, PLATFORM_ID, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Supabase } from '../../../services/supabase/supabase';
-import { Phone } from 'lucide-angular';
+// import { Phone } from 'lucide-angular';
+import { LoginService } from '../../../services/login_service/login-service';
 @Component({
   selector: 'app-selection-page',
   standalone: true, 
@@ -12,6 +13,7 @@ import { Phone } from 'lucide-angular';
   styleUrls: ['./selection-page.scss'],
 })
 export class SelectionPage {
+  private loginService = inject(LoginService)
   private router = inject(Router)
   private platformid = inject(PLATFORM_ID)
   private supabaseService = inject(Supabase)
@@ -24,6 +26,8 @@ export class SelectionPage {
   }
 
   async submit_desired_selection(){
+    const getuser = await this.loginService.getCurrentUser();
+    const userID = getuser?.id;
     if(isPlatformBrowser(this.platformid)){
       localStorage.setItem("desired_company", this.desired_company)
       localStorage.setItem("desired_role", this.desired_role)
@@ -36,6 +40,7 @@ export class SelectionPage {
       const{data, error} = await this.supabaseService.supabase
       .from('resumes')
       .insert({
+        id: userID,
         name: resume_data.name,
         email: resume_data.email,
         phone: resume_data.phone,
@@ -57,8 +62,9 @@ export class SelectionPage {
       if(data){
         console.log(data)
       }
-
-
+      if(userID){
+        localStorage.setItem("userID", String(userID));
+      }
       localStorage.removeItem("resume_data")  
       localStorage.removeItem("desired_company")  
       localStorage.removeItem("desired_role") 

@@ -61,8 +61,10 @@ class uploadedResume(BaseModel):
 
 
 class interview(BaseModel):
+    loggedUserID:str
     interview_type:str
     interview_role:str
+
 
 
 @app.get("/health")
@@ -114,10 +116,10 @@ async def analyzeResume(payload: uploadedResume):
 
 @app.post("/mock_interview")
 async def mock_interview(interview_data: interview):
-    print("interview data: ", interview_data)
+    # print("interview data: ", interview_data)
 
     return StreamingResponse(
-            run_chain(interview_data.interview_type, interview_data.interview_role), 
+            run_chain(interview_data.loggedUserID, interview_data.interview_type, interview_data.interview_role), 
             media_type="text/event-stream"
         )
 

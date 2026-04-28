@@ -1,7 +1,8 @@
-import { Component,inject,  ChangeDetectorRef } from '@angular/core';
+import { Component,inject,  ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { LoginService } from '../../services/login_service/login-service';
+import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-mock-interview',
   standalone: true, 
@@ -10,17 +11,24 @@ import { LoginService } from '../../services/login_service/login-service';
   styleUrls: ['./mock-interview.scss'],
 })
 export class MockInterview {
-  private loginService = inject(LoginService)
+  private platformid = inject(PLATFORM_ID)
+  // private loginService = inject(LoginService)
   private cdr = inject(ChangeDetectorRef)
   interview_type:string = "";
   displayed_text = ""
+  loggedUserID:string|null = ""
   interview_role = new FormControl("", [Validators.required]);
   interviewType(value:string){
     this.interview_type = value 
   }
 
   async start_interview(){
+
+    if(isPlatformBrowser(this.platformid)){
+      this.loggedUserID = localStorage.getItem("userID")
+    }
     const payload = {
+      "loggedUserID" : this.loggedUserID,
       "interview_type" : this.interview_type,
       "interview_role" : this.interview_role.value  
     }
@@ -52,8 +60,8 @@ export class MockInterview {
       }
   }
 
-   async currentUserSession(){
-    const currentUser = await this.loginService.getCurrentUser()
-    console.log("this is the current logged in user: ", currentUser);
-  }
+  //  async currentUserSession(){
+  //     const currentUser = await this.loginService.getCurrentUser()
+  //     console.log("this is the current logged in user: ", currentUser?.id);
+  // }
 }

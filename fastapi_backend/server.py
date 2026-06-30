@@ -11,8 +11,9 @@ from resume_evaluation.evaluation import resume_evaluation
 from supabase_integration.auth import supabase
 from urllib.parse import unquote
 from resume_evaluation.resume_extraction import resume_Parser
-from mock_interview.interview import run_chain
 
+# from mock_interview.interview import run_chain
+from mock_interview.qg import genenrate_questions
 app = FastAPI() 
 
 app.add_middleware(
@@ -64,8 +65,14 @@ class interview(BaseModel):
     loggedUserID:str
     interview_type:str
     interview_role:str
+    
 
-
+class NextQt(BaseModel):
+    first_question:str
+    answer:str
+    loggedUserID:str
+    interview_type:str
+    interview_role:str
 
 @app.get("/health")
 def home():
@@ -114,14 +121,49 @@ async def analyzeResume(payload: uploadedResume):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+
+
 @app.post("/mock_interview")
 async def mock_interview(interview_data: interview):
-    # print("interview data: ", interview_data)
+    print(interview_data.loggedUserID)
+    interview_type = interview_data.interview_type
+    interview_role = interview_data.interview_role
+    prompt = f"""
+        You are an expert interviewer conducting an interview. Your task is to generate exactly ONE highly relevant, realistic interview question.
 
+        Guidelines:
+        1. Tailor the question specifically to the provided Interview Type and Interview Role.
+        2. Strictly output ONLY the question itself. No introductory text, no conversational filler, no explanations, and no closing remarks.
+
+        Input:
+        - Interview Type: {interview_type}
+        - Interview Role: {interview_role}
+
+        """
     return StreamingResponse(
-            run_chain(interview_data.loggedUserID, interview_data.interview_type, interview_data.interview_role), 
+            genenrate_questions(prompt),
             media_type="text/event-stream"
         )
+
+
+
+@app.post("/next_qt")
+async def next_qt(next_qt:NextQt):
+    user_prompt = f"""k dude am giving you an interview question and the answer that the user gave and you have to evaluate the answer as to how accurate/good the answer was and if the answer is not according to expectations then ask only one deeper question which was based on previous question and if the answer was good enough or even faintly satisfactory then move on to the next question. Here is the question {next_qt.first_question} and this is the answer {next_qt.answer} 
+    IMPORTANT NOTE and RULES
+    only ask question do not explain or add any more text STRICT
+    always keep the question based on the user selected interview type and role!, the interview type is {next_qt.interview_type} and role that the user has selected is {next_qt.interview_role} this is too STRICT
+    
+    Follow the NOTE and RULES"""
+    # response = await genenrate_questions(user_prompt)
+    # print(response)
+
+    return StreamingResponse(
+        genenrate_questions(user_prompt),
+        media_type="text/event-stream"
+    )
+
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

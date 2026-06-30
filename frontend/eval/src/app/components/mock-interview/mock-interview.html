@@ -1,22 +1,23 @@
-<!-- <button type="button" (click)="currentUserSession()" class="border border-black px-5 py-2">Get User</button>
 <div>
-    @if(displayed_text){
-        <div>{{displayed_text}}</div>
-    }
-</div> -->
-<div class="h-screen">
-    <form>
-        <div class="h-screen flex justify-center items-center flex-col">
-            <label for="">Type of interview</label>
-            <div class="mt-5 ">
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Technical Interview')">Technical Interview</button>
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Behavioral Interview')">Behavioral Interview</button>
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Combined')">Combined</button>
-            </div>
+    <div class="border px-10 py-5 mx-5 my-10">
+        @if(first_question){
+            <h1>{{first_question}}</h1>
+        }
+        
+        @else if(new_question){
+            <h1>{{new_question}}</h1>
+        }
+    </div>
+    <div>
+        <form>
             <div>
-                <input type="text" placeholder="User Input" class="border border-solid mt-10" placeholder="Interview for role?" [formControl]="interview_role">
+                <textarea
+                    class="border w-screen"
+                    placeholder="Enter your asnwer here"
+                    rows="4"
+                    [formControl]="user_answer"></textarea>
+                <button type="button" class="border px-5 py-3" (click)="submit()">Next -></button>
             </div>
-            <button type="button" (click)="start_interview()" class="border border-solid mt-10">start</button >
-        </div>
-    </form>
+        </form>
+    </div>
 </div>

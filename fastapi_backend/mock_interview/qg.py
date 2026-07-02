@@ -27,7 +27,9 @@ async def genenrate_questions(user_prompt:str) :
             yield f"data: {chunk.content}\n\n"
 
 
-
+def evaluate_answer(question:str, answer:str):
+    response = c1.invoke(f"""This is an interveiew question: {question} and an answer: {answer}, you have to evaluate this and suggest some improvements return the improvements in a json format, each and every recommendation on improvement should be written in json format""")
+    print(response.content)
 
 # class State(TypedDict):
 #     question:str

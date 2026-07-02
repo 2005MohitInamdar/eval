@@ -1,4 +1,4 @@
-<div>
+<!-- <div>
     <div>
         <span>
             <h1>Company Name: </h1>
@@ -10,7 +10,108 @@
         </span>
     </div>
     <button class="border px-1 py-2 cursor-pointer" (click)="submit_desired_selection()">
-    <!-- <button class="border px-1 py-2 cursor-pointer" (click)="submit_desired_selection()" [disabled]="!desired_company || !desired_role"> -->
         Save
     </button>
+</div> -->
+
+
+
+<div class="relative min-h-screen bg-[#131420] text-[#F4F0E6] font-body flex items-center justify-center p-6 md:p-12 overflow-hidden">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+        .font-display { font-family: 'Fraunces', serif; font-feature-settings: 'ss01'; }
+        .font-body { font-family: 'Inter', sans-serif; }
+        .font-tag { font-family: 'JetBrains Mono', monospace; }
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+    </style>
+
+    <!-- Spotlight glow: dims when the form is empty, warms up as fields are filled -->
+    <div
+        class="absolute top-1/2 right-[8%] -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none z-0 transition-opacity duration-700 ease-out"
+        [style.opacity]="0.25 + (desired_company ? 0.22 : 0) + (desired_role ? 0.22 : 0)"
+        style="background: radial-gradient(circle, rgba(227,165,72,0.55) 0%, rgba(227,165,72,0.12) 35%, transparent 70%);"
+    ></div>
+
+    <!-- Faint grain/texture via layered dots so the dark bg doesn't feel flat -->
+    <div class="absolute inset-0 z-0 opacity-[0.04] bg-[radial-gradient(#F4F0E6_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+    <!-- Content: text block left, form card right -->
+    <div class="relative z-10 w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+
+        <!-- LEFT: eyebrow + headline + subtext, vertically centered, left aligned -->
+        <div class="flex flex-col justify-center max-w-xl">
+            <div class="flex items-center gap-2 mb-8">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#E3A548]"></span>
+                <p class="font-tag text-xs md:text-sm tracking-[0.3em] text-[#E3A548] uppercase">Before you walk in</p>
+            </div>
+
+            <h1 class="font-display text-5xl md:text-6xl xl:text-7xl leading-[1.05] text-[#F4F0E6] mb-6">
+                Let's set<br/><span class="italic text-[#E3A548]">the scene.</span>
+            </h1>
+
+            <p class="font-body text-lg md:text-xl text-[#F4F0E6]/55 leading-relaxed max-w-md">
+                Tell us who you're meeting and what for — every question we ask will be built around it.
+            </p>
+        </div>
+
+        <!-- RIGHT: form card -->
+        <div class="w-full flex justify-center lg:justify-end">
+            <div class="w-full max-w-md bg-[#1B1D2B]/70 backdrop-blur-md border border-white/[0.06] rounded-3xl p-8 md:p-9 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.5)] space-y-7">
+
+                <!-- Company field, underline style -->
+                <div class="space-y-2.5">
+                    <label for="company" class="font-tag text-[10px] tracking-[0.2em] text-[#F4F0E6]/45 uppercase">
+                        Interviewing with
+                    </label>
+                    <input
+                        id="company"
+                        type="text"
+                        [(ngModel)]="desired_company"
+                        required
+                        placeholder="Company name"
+                        class="w-full bg-transparent border-0 border-b border-white/15 focus:border-[#E3A548] text-[#F4F0E6] text-lg font-display px-0.5 py-2.5 outline-none transition-colors placeholder:text-[#F4F0E6]/25 placeholder:font-body placeholder:text-base"
+                    >
+                </div>
+
+                <!-- Role field, underline style -->
+                <div class="space-y-2.5">
+                    <label for="role" class="font-tag text-[10px] tracking-[0.2em] text-[#F4F0E6]/45 uppercase">
+                        Interviewing for
+                    </label>
+                    <input
+                        id="role"
+                        type="text"
+                        [(ngModel)]="desired_role"
+                        required
+                        placeholder="Role or job title"
+                        class="w-full bg-transparent border-0 border-b border-white/15 focus:border-[#E3A548] text-[#F4F0E6] text-lg font-display px-0.5 py-2.5 outline-none transition-colors placeholder:text-[#F4F0E6]/25 placeholder:font-body placeholder:text-base"
+                    >
+                </div>
+
+                <!-- CTA -->
+                <button
+                    type="button"
+                    (click)="submit_desired_selection()"
+                    [disabled]="!desired_company || !desired_role"
+                    class="group relative w-full bg-[#E3A548] text-[#131420] disabled:bg-white/[0.06] disabled:text-[#F4F0E6]/25 disabled:pointer-events-none font-body font-semibold text-sm px-8 py-4 rounded-full hover:bg-[#EFC178] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 mt-2"
+                >
+                    <span>Start the interview</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.4" stroke="currentColor"
+                        class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                    </svg>
+                </button>
+
+                <!-- Readiness line, replaces a generic status badge with something that speaks to the moment -->
+                <p class="text-center font-tag text-[10px] tracking-[0.15em] uppercase transition-colors duration-500"
+                   [class.text-[#E3A548]]="desired_company && desired_role"
+                   [class.text-[#F4F0E6]/30]="!(desired_company && desired_role)">
+                    {{ (desired_company && desired_role) ? 'Scene is set — whenever you\'re ready' : 'Fill both to bring up the lights' }}
+                </p>
+            </div>
+        </div>
+    </div>
 </div>

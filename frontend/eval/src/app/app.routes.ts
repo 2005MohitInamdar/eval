@@ -105,6 +105,7 @@ import { UserUiWrapper } from "./components/interview_dashboard/user-ui-wrapper/
 import { Dashboard } from "./components/interview_dashboard/dashboard/dashboard";
 import { MockInterview } from "./components/mock-interview/mock-interview";
 import { InterviewDetails } from "./components/interview-details/interview-details";
+import { Login } from "./components/authentication/login/login";
 export const routes: Routes =  [
   {path: '', redirectTo: 'SelectionPage', pathMatch:'full'}, 
   {path: 'uploadResume', component: UploadResume, title: 'upload resume page'},
@@ -112,6 +113,7 @@ export const routes: Routes =  [
   {path: 'SelectionPage', component: SelectionPage, title: 'Company and role Selection Page'},
   {path: 'InterviewDetails', component: InterviewDetails, title : 'To fill in interview details'},
   {path: 'MockInterview', component: MockInterview, title: 'Mock Interview Page'},
+  {path: 'login', component: Login, title: 'Mock Interview Page'},
 
   {
     path: "ui_wrapper",

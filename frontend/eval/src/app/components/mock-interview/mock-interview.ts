@@ -21,6 +21,7 @@ export class MockInterview {
   interview_type:string|null = "";
   loggedUserID:string|null = ""
   interview_role:string|null = "";
+  intensity_level:string|null = ""
   new_question = ""
 
 
@@ -30,11 +31,14 @@ export class MockInterview {
       this.first_question = localStorage.getItem("first_question") ?? ""
       this.interview_type = localStorage.getItem("interview_type") ?? ""
       this.interview_role = localStorage.getItem("interview_role") ?? ""
+      this.intensity_level = localStorage.getItem("intensity_level")
       this.loggedUserID = localStorage.getItem("loggedUserID") ?? ""
-
     }
     console.log(this.first_question)
+
   }
+
+  
 
   async submit(){
     const payload = {
@@ -42,7 +46,8 @@ export class MockInterview {
       "answer": this.user_answer.value,
       "interview_type": this.interview_type,
       "interview_role": this.interview_role,
-      "loggedUserID": this.loggedUserID
+      "loggedUserID": this.loggedUserID,
+      "intensity_level" : this.intensity_level
     }
 
 
@@ -50,6 +55,8 @@ export class MockInterview {
     this.first_question = "";     
     this.user_answer.reset();     
     this.cdr.detectChanges();
+
+    
     const response = await fetch("http://127.0.0.1:8000/next_qt", {
       method: "POST",
       headers: {"content-Type": "application/json"},
@@ -65,14 +72,13 @@ export class MockInterview {
         if(done) break
 
         const chunk = decoder.decode(value, {stream:true})
-
         const cleaned_text = chunk.replace(/data: /g, "")
 
         this.new_question += cleaned_text
-        console.log(this.new_question)
-
+    
         this.cdr.detectChanges();
       }
+
 
       // this.first_question = ""
       if(isPlatformBrowser(this.platformid)){

@@ -16,13 +16,17 @@ export class InterviewDetails {
   private platformid = inject(PLATFORM_ID)
   private cdr = inject(ChangeDetectorRef)
   private router = inject(Router)
+  
   displayed_text = ""
   interview_type:string = "";
   loggedUserID:string|null = ""
   interview_role = new FormControl("", [Validators.required]);
+  intensity_level = new FormControl("", [Validators.required]);
+
   interviewType(value:string){
     this.interview_type = value 
   }
+
   async start_interview(){
 
     if(isPlatformBrowser(this.platformid)){
@@ -31,9 +35,9 @@ export class InterviewDetails {
     const payload = {
       "loggedUserID" : this.loggedUserID,
       "interview_type" : this.interview_type,
-      "interview_role" : this.interview_role.value    
+      "interview_role" : this.interview_role.value,
+      "intensity_level" : this.intensity_level.value
     }
-    console.log(payload)  
 
     const response = await fetch("http://127.0.0.1:8000/mock_interview", {
       method: "POST",
@@ -50,16 +54,22 @@ export class InterviewDetails {
         if(done) break
 
         const chunk = decoder.decode(value, {stream:true})
-
         const cleaned_text = chunk.replace(/data: /g, "")
 
         this.displayed_text += cleaned_text
-        console.log(this.displayed_text)
 
+        console.log(this.displayed_text)
         this.cdr.detectChanges();
       }
 
+
+
+      localStorage.setItem("interview_type", this.interview_type)
+      localStorage.setItem("interview_role", String(this.interview_role.value ?? "")) 
+      localStorage.setItem("intensity_level", String(this.intensity_level.value ?? "")) 
       localStorage.setItem("first_question", this.displayed_text)
+
+
       this.router.navigate(['/MockInterview'])
   }
 }

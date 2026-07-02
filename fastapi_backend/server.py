@@ -1,7 +1,7 @@
 import uvicorn
 import logging
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +13,7 @@ from urllib.parse import unquote
 from resume_evaluation.resume_extraction import resume_Parser
 
 # from mock_interview.interview import run_chain
-from mock_interview.qg import genenrate_questions
+from mock_interview.qg import genenrate_questions, evaluate_answer
 app = FastAPI() 
 
 app.add_middleware(
@@ -65,6 +65,7 @@ class interview(BaseModel):
     loggedUserID:str
     interview_type:str
     interview_role:str
+    intensity_level:str
     
 
 class NextQt(BaseModel):
@@ -73,6 +74,7 @@ class NextQt(BaseModel):
     loggedUserID:str
     interview_type:str
     interview_role:str
+    intensity_level:str
 
 @app.get("/health")
 def home():
@@ -126,8 +128,6 @@ async def analyzeResume(payload: uploadedResume):
 @app.post("/mock_interview")
 async def mock_interview(interview_data: interview):
     print(interview_data.loggedUserID)
-    interview_type = interview_data.interview_type
-    interview_role = interview_data.interview_role
     prompt = f"""
         You are an expert interviewer conducting an interview. Your task is to generate exactly ONE highly relevant, realistic interview question.
 
@@ -136,8 +136,9 @@ async def mock_interview(interview_data: interview):
         2. Strictly output ONLY the question itself. No introductory text, no conversational filler, no explanations, and no closing remarks.
 
         Input:
-        - Interview Type: {interview_type}
-        - Interview Role: {interview_role}
+        - Interview Type: {interview_data.interview_type}
+        - Interview Role: {interview_data.interview_role}
+        - Interview Intensity: {interview_data.intensity_level}
 
         """
     return StreamingResponse(
@@ -148,15 +149,15 @@ async def mock_interview(interview_data: interview):
 
 
 @app.post("/next_qt")
-async def next_qt(next_qt:NextQt):
-    user_prompt = f"""k dude am giving you an interview question and the answer that the user gave and you have to evaluate the answer as to how accurate/good the answer was and if the answer is not according to expectations then ask only one deeper question which was based on previous question and if the answer was good enough or even faintly satisfactory then move on to the next question. Here is the question {next_qt.first_question} and this is the answer {next_qt.answer} 
+async def next_qt(next_qt:NextQt, background_tasks:BackgroundTasks):
+    user_prompt = f"""k dude am giving you an interview question and the answer that the user gave and you have to evaluate the answer as to how accurate/good the answer was and if the answer is not according to expectations then ask only one deeper question which was based on previous question and if the answer was good enough or even faintly satisfactory then move on to the next question. Here is the question {next_qt.first_question} and this is the answer {next_qt.answer} and the interview intensity is {next_qt.intensity_level}
     IMPORTANT NOTE and RULES
     only ask question do not explain or add any more text STRICT
     always keep the question based on the user selected interview type and role!, the interview type is {next_qt.interview_type} and role that the user has selected is {next_qt.interview_role} this is too STRICT
     
     Follow the NOTE and RULES"""
-    # response = await genenrate_questions(user_prompt)
-    # print(response)
+
+    background_tasks.add_task(evaluate_answer, next_qt.first_question, next_qt.answer)
 
     return StreamingResponse(
         genenrate_questions(user_prompt),

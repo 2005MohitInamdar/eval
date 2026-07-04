@@ -141,11 +141,8 @@ async def mock_interview(interview_data: interview):
         - Interview Intensity: {interview_data.intensity_level}
 
         """
-    return StreamingResponse(
-            genenrate_questions(prompt),
-            media_type="text/event-stream"
-        )
-
+    response_qt = genenrate_questions(prompt)
+    return response_qt 
 
 
 @app.post("/next_qt")
@@ -158,11 +155,9 @@ async def next_qt(next_qt:NextQt, background_tasks:BackgroundTasks):
     Follow the NOTE and RULES"""
 
     background_tasks.add_task(evaluate_answer, next_qt.first_question, next_qt.answer)
+    response = genenrate_questions(user_prompt)
 
-    return StreamingResponse(
-        genenrate_questions(user_prompt),
-        media_type="text/event-stream"
-    )
+    return response
 
 
 

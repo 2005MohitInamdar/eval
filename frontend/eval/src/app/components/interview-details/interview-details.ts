@@ -1,9 +1,10 @@
-import { Component,inject,  ChangeDetectorRef, PLATFORM_ID } from '@angular/core';
+import { Component,inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { LoginService } from '../../services/login_service/login-service';
+// import { LoginService } from '../../services/login_service/login-service';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-interview-details',
   standalone: true,
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 
 export class InterviewDetails {
+  private http = inject(HttpClient)
   private platformid = inject(PLATFORM_ID)
   private cdr = inject(ChangeDetectorRef)
   private router = inject(Router)
@@ -39,37 +41,22 @@ export class InterviewDetails {
       "intensity_level" : this.intensity_level.value
     }
 
-    const response = await fetch("http://127.0.0.1:8000/mock_interview", {
-      method: "POST",
-      headers: {"content-Type": "application/json"},
-      body: JSON.stringify(payload)
-    })
-      if(!response.body) return
+    this.http.post("http://127.0.0.1:8000/mock_interview", payload, { responseType: 'text' }).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.displayed_text+=res
 
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-
-      while(true){
-        const {value, done} = await reader.read()
-        if(done) break
-
-        const chunk = decoder.decode(value, {stream:true})
-        const cleaned_text = chunk.replace(/data: /g, "")
-
-        this.displayed_text += cleaned_text
-
-        console.log(this.displayed_text)
-        this.cdr.detectChanges();
+        localStorage.setItem("interview_type", this.interview_type)
+        localStorage.setItem("interview_role", String(this.interview_role.value ?? "")) 
+        localStorage.setItem("intensity_level", String(this.intensity_level.value ?? "")) 
+        localStorage.setItem("first_question", this.displayed_text)
+        
+        this.router.navigate(['/MockInterview'])
+        this.cdr.detectChanges()
+      },
+      error: (err) => {
+        alert(err)
       }
-
-
-
-      localStorage.setItem("interview_type", this.interview_type)
-      localStorage.setItem("interview_role", String(this.interview_role.value ?? "")) 
-      localStorage.setItem("intensity_level", String(this.intensity_level.value ?? "")) 
-      localStorage.setItem("first_question", this.displayed_text)
-
-
-      this.router.navigate(['/MockInterview'])
+    })
   }
 }

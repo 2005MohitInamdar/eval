@@ -16,6 +16,7 @@ export class MockInterview {
   private http = inject(HttpClient)
   private cdr = inject(ChangeDetectorRef)
   private platformid = inject(PLATFORM_ID)
+
   first_question:string|null = ""
   user_answer = new FormControl("", [Validators.required])
   interview_type:string|null = "";
@@ -56,33 +57,23 @@ export class MockInterview {
     this.user_answer.reset();     
     this.cdr.detectChanges();
 
+
+
     
-    const response = await fetch("http://127.0.0.1:8000/next_qt", {
-      method: "POST",
-      headers: {"content-Type": "application/json"},
-      body: JSON.stringify(payload)
-    })
-      if(!response.body) return
-
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-
-      while(true){
-        const {value, done} = await reader.read()
-        if(done) break
-
-        const chunk = decoder.decode(value, {stream:true})
-        const cleaned_text = chunk.replace(/data: /g, "")
-
-        this.new_question += cleaned_text
-    
+    this.http.post("http://127.0.0.1:8000/next_qt", payload).subscribe({
+      next: (res) => {
+        console.log(res)
+        this.new_question += res
+        if(isPlatformBrowser(this.platformid)){
+          localStorage.setItem("first_question", this.new_question)
+        }
         this.cdr.detectChanges();
+      },
+      error : (err) => {
+        console.log(err)
       }
+    })
 
 
-      // this.first_question = ""
-      if(isPlatformBrowser(this.platformid)){
-        localStorage.setItem("first_question", this.new_question)
-      }
   }
 }

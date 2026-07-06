@@ -11,6 +11,6 @@ export class Dashboard {
   private router = inject(Router)
 
   mockInterview(){
-    this.router.navigate(['/MockInterview']);
+    this.router.navigate(['/interviewDetails']);
   }
 }

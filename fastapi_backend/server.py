@@ -157,9 +157,14 @@ async def next_qt(next_qt:NextQt, background_tasks:BackgroundTasks):
     background_tasks.add_task(evaluate_answer, next_qt.first_question, next_qt.answer)
     response = genenrate_questions(user_prompt)
 
+    # return {
+    #     "status": "success",
+    #     "question": response["text"],
+    #     "audio_url": ""
+    # }
     return response
 
-
+# we have to provide a path of question audios here
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -112,6 +112,8 @@ import { Dashboard } from "./components/interview_dashboard/dashboard/dashboard"
 import { MockInterview } from "./components/mock-interview/mock-interview";
 import { InterviewDetails } from "./components/interview-details/interview-details";
 import { Login } from "./components/authentication/login/login";
+import { Resume } from "./components/interview_dashboard/dashboard_functions/resume/resume";
+import { UpdateRes } from "./components/interview_dashboard/update-res/update-res";
 export const routes: Routes =  [
   {path: '', redirectTo: 'SelectionPage', pathMatch:'full'}, 
   {path: 'uploadResume', component: UploadResume, title: 'upload resume page'},
@@ -120,18 +122,21 @@ export const routes: Routes =  [
   {path: 'InterviewDetails', component: InterviewDetails, title : 'To fill in interview details'},
   {path: 'MockInterview', component: MockInterview, title: 'Mock Interview Page'},
   {path: 'login', component: Login, title: 'Mock Interview Page'},
-
+  
   {
     path: "ui_wrapper",
     title: "Dashboard Wrapper Page",
     component: UserUiWrapper,
-        children: [
-          {path: "", redirectTo: "dashboard", pathMatch: 'full'}, 
-          {
-            path: "dashboard",
-            title: "Interview Dashbord Page",
-            component: Dashboard
-          },
+    children: [
+      {path: "", redirectTo: "dashboard", pathMatch: 'full'}, 
+      {
+        path: "dashboard",
+        title: "Interview Dashbord Page",
+        component: Dashboard
+      },
+      // {path: 'InterviewDetails', component: InterviewDetails, title: 'To fill in interview related details'},
+      {path: 'resume', component: Resume, title: 'This is the resume Page'},
+      {path: 'UpdateRes', component: UpdateRes, title: 'this is the update resume page'},
       ]
   }
 ]

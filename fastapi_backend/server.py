@@ -11,8 +11,6 @@ from resume_evaluation.evaluation import resume_evaluation
 from supabase_integration.auth import supabase
 from urllib.parse import unquote
 from resume_evaluation.resume_extraction import resume_Parser
-
-# from mock_interview.interview import run_chain
 from mock_interview.qg import genenrate_questions, evaluate_answer
 app = FastAPI() 
 
@@ -25,12 +23,10 @@ app.add_middleware(
 
 security = HTTPBearer()
 
-
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
-
 
 class RequestQuestions(BaseModel):
     frontend_data: str
@@ -47,26 +43,22 @@ class LoginRequest(BaseModel):
 class ResetPasswordRequest(BaseModel):
     user_email:str
 
-
 class UpdateUserEmail(BaseModel):
     user_email:str
 
 class UpdateUserPassword(BaseModel):
     password:str
 
-
 class uploadedResume(BaseModel):
     file_path:str
     file_name:str
     mime_type:str
-
 
 class interview(BaseModel):
     loggedUserID:str
     interview_type:str
     interview_role:str
     intensity_level:str
-    
 
 class NextQt(BaseModel):
     first_question:str
@@ -79,9 +71,6 @@ class NextQt(BaseModel):
 @app.get("/health")
 def home():
     return {"message": "Backend health 🟢"}
-
-
-# auth api endpoints start
 
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError):
@@ -97,9 +86,6 @@ async def universal_exception_handler(request: Request, exc: Exception):
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={"detail": "An internal server error occurred."},
     )
-
-
-
 
 async def download_file(filePath):
     fileBytes = supabase.storage.from_('resumes').download(filePath)
@@ -123,11 +109,28 @@ async def analyzeResume(payload: uploadedResume):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-
-
+def load_resume(user_id: str):
+    response = (
+        supabase.table("resumes")
+        .select("*")
+        .eq("id", user_id)
+        .execute()
+    )
+    
+    # data is returned in response.data (which is a list)
+    if response.data:
+        resume_data = response.data[0]  # Equivalent to single record
+        print("Resume Data:", resume_data)
+        return resume_data
+    else:
+        print("No resume found or error occurred.")
+        return None
+    
 @app.post("/mock_interview")
 async def mock_interview(interview_data: interview):
-    print(interview_data.loggedUserID)
+    res_data = load_resume(interview_data.loggedUserID)
+    print(res_data)
+    # print(interview_data.loggedUserID)
     prompt = f"""
         You are an expert interviewer conducting an interview. Your task is to generate exactly ONE highly relevant, realistic interview question.
 
@@ -139,32 +142,34 @@ async def mock_interview(interview_data: interview):
         - Interview Type: {interview_data.interview_type}
         - Interview Role: {interview_data.interview_role}
         - Interview Intensity: {interview_data.intensity_level}
-
+        - based on this resume {res_data} see the skills and other resume related details and then ask questions accordingly. 
         """
-    response_qt = genenrate_questions(prompt)
-    return response_qt 
-
+    response_qt = await genenrate_questions(prompt)
+    return {
+        "status": "success",
+        "question": response_qt["text"],
+        "audio_url": response_qt["audio_path"]
+    }
 
 @app.post("/next_qt")
 async def next_qt(next_qt:NextQt, background_tasks:BackgroundTasks):
+    res_dataForNext = load_resume(next_qt.loggedUserID)
+    print(res_dataForNext)
     user_prompt = f"""k dude am giving you an interview question and the answer that the user gave and you have to evaluate the answer as to how accurate/good the answer was and if the answer is not according to expectations then ask only one deeper question which was based on previous question and if the answer was good enough or even faintly satisfactory then move on to the next question. Here is the question {next_qt.first_question} and this is the answer {next_qt.answer} and the interview intensity is {next_qt.intensity_level}
     IMPORTANT NOTE and RULES
     only ask question do not explain or add any more text STRICT
     always keep the question based on the user selected interview type and role!, the interview type is {next_qt.interview_type} and role that the user has selected is {next_qt.interview_role} this is too STRICT
-    
+    based on this resume {res_dataForNext} see the skills and other resume related details and then ask questions accordingly. 
     Follow the NOTE and RULES"""
 
     background_tasks.add_task(evaluate_answer, next_qt.first_question, next_qt.answer)
-    response = genenrate_questions(user_prompt)
+    response = await genenrate_questions(user_prompt)
 
-    # return {
-    #     "status": "success",
-    #     "question": response["text"],
-    #     "audio_url": ""
-    # }
-    return response
-
-# we have to provide a path of question audios here
+    return {
+        "status": "success",
+        "question": response["text"],
+        "audio_url": response["audio_path"]
+    }
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)

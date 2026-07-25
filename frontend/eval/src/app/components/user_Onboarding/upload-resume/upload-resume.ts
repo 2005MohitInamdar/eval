@@ -74,6 +74,10 @@ export class UploadResume implements OnInit{
     }
     else{
       console.log(data.path)
+      if(isPlatformBrowser(this.platformId)){
+        localStorage.setItem("resume_file_name", name_of_file)
+      }
+      
       const payload = {
         'file_path' : data.path,
         'file_name' : name_of_file,

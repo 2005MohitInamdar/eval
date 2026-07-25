@@ -1,1 +1,167 @@
-<p>resume works!</p>
+<div class="min-h-screen bg-gray-50 p-8 ">
+  <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
+    <div class="bg-indigo-600 p-6 text-white">
+      <h1 class="text-2xl font-bold">Confirm Resume</h1>
+      <p class="text-indigo-100 text-sm">Fill in your details to generate your professional CV</p>
+    </div>
+    @if(resume_data){
+      <form class="p-8 space-y-8">
+        <section>
+          <h2 class="text-lg font-semibold text-white-800 border-b pb-2 mb-4">Personal Information</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" >
+            <span class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-600">Full Name</label>
+              <div>{{resume_data.name}}</div>
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-600">Email Address</label>
+              <div>{{resume_data.email}}</div>
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-600">Phone Number</label>
+              <div>{{resume_data.phone}}</div>
+            </span>
+            <span class="flex flex-col gap-1">
+              <label class="text-sm font-medium text-gray-600">Location</label>
+              <div>{{resume_data.location}}</div>
+            </span>
+          </div>
+        </section>
+  
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+          <span class="flex flex-col gap-1">
+            <label class="text-xs font-bold uppercase text-gray-400">LinkedIn</label>
+            <div>{{resume_data.linkedin_url}}</div>
+          </span>
+          <span class="flex flex-col gap-1">
+            <label class="text-xs font-bold uppercase text-gray-400">GitHub</label>
+             <div>{{resume_data.github_url}}</div>
+          </span>
+          <span class="flex flex-col gap-1">
+            <label class="text-xs font-bold uppercase text-gray-400">Portfolio</label>
+             <div>{{resume_data.portfolio_url}}</div>
+          </span>
+        </section>
+
+        <section>
+          @for(edu of resume_data.education;track edu.institution){
+            <div class="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Education</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <span class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">Institution</label>
+                <div>{{edu.institution}}</div>
+              </span>
+              <span class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">{{edu.degree}}</label>
+                <div>Degree</div>
+              </span>
+              <span class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">Percentage / CGPA</label>
+                <div>{{edu.percentage_or_cgpa}}</div>
+              </span>
+              <span class="flex flex-col gap-1">
+                <label class="text-sm text-gray-600">Year of Passing</label>
+                <div>{{edu.year_of_passing}}</div>
+              </span>
+            </div>
+          }@empty {
+            <p class="text-sm text-gray-500 italic">No education history added yet.</p>
+          }
+          </section>
+
+          <section class="flex justify-between items-center border-b pb-2 mb-4">
+            <div>
+              <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Projects
+              </h3>
+              @for(proj of resume_data.projects; track $index){
+                <div class="flex flex-wrap gap-2">
+                  <span class="font-bold text-indigo-600 mr-2">Project {{ $index + 1 }}</span>
+                  <div>{{proj}}</div><br>
+                </div>
+              }@empty{
+                <p class="text-sm text-gray-500 italic">No projects listed yet.</p>
+              }
+            </div>  
+          </section>
+
+          <section>
+            <div class="flex justify-between items-center border-b pb-2 mb-4">
+              <h2 class="text-lg font-semibold text-gray-800">Experience</h2>
+            </div>
+            @for(exp of resume_data.experience; track $index){
+              <div class="mb-6 p-4 border border-gray-200 rounded-xl relative hover:border-indigo-300 transition">
+                <span class="absolute -top-3 left-4 bg-white px-2 text-xs font-bold text-indigo-500">experience {{$index+1}}</span>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <span class="flex flex-col gap-1">
+                    <label class="text-sm text-gray-600">Company</label>
+                    <div>{{exp.company}}</div>
+                  </span>
+                  <span class="flex flex-col gap-1">
+                    <label class="text-sm text-gray-600">Job Title</label>
+                    <div>{{exp.duration}}</div>
+                  </span>
+                  <span class="flex flex-col gap-1">
+                    <label class="text-sm text-gray-600">Duration</label>
+                    <div>{{exp.job_title}}</div>
+                  </span>
+                  <div class="md:col-span-2 flex flex-col gap-2">
+                    <label class="text-sm font-semibold text-gray-700">Responsibilities</label>
+                    @for(res of exp.description; track $index){
+                        <div>
+                           {{res}}
+                        </div>
+                    }@empty{
+                      <p class="text-sm text-gray-500 italic">No Responsibilities listed yet.</p>
+                    }
+                    </div>
+                </div>
+              </div>
+            }@empty{
+              <p class="text-sm text-gray-500 italic">No Experience listed yet.</p>
+            }
+        </section>
+        
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Soft Skills
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              @for(soft_skill of resume_data.soft_skills; track $index){
+                <div class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
+                  {{soft_skill}}
+                </div>
+              }@empty{
+                <p class="text-sm text-gray-500 italic">No soft skills listed yet.</p>
+              }
+            </div>
+          </div>
+          <div>
+            <h3 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+              <span class="w-2 h-2 bg-green-500 rounded-full"></span> Technical Skills
+            </h3>
+            <div class="flex flex-wrap gap-2">
+              @for(tech_skills of resume_data.technical_skills; track $index){
+                <div class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-sm font-medium">
+                  {{tech_skills}}
+                </div>
+              }@empty{
+                <p class="text-sm text-gray-500 italic">No technical skills listed yet.</p>
+              }
+            </div>
+          </div>
+        </section>
+      </form>
+    }
+    <button
+      type="button"
+      class="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition"
+      (click)="update_resume()"
+      >
+      Update Resume
+    </button>
+  </div>
+</div>

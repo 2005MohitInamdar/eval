@@ -1,12 +1,18 @@
-import { Component, inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { AuthUiWrapper } from '../auth-ui-wrapper/auth-ui-wrapper';
-import { Auth } from '../../../services/auth';
 import { RouterLink } from '@angular/router';
 import { OnInit } from '@angular/core';
 import { LoginService } from '../../../services/login_service/login-service';
 import { Router } from '@angular/router';
-
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../../environments/environment.development';
+import { Auth } from '../../../services/auth';
+interface LoginPayload {
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -15,34 +21,64 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrls: ['./login.scss'],
 })
+
+
+
 export class Login implements OnInit{
-  platformID = inject(PLATFORM_ID)
+  private platformID = inject(PLATFORM_ID)
   authService = inject(Auth)
-  loginService = inject(LoginService)
-  router = inject(Router)
+  private loginService = inject(LoginService)
+  private http = inject(HttpClient)
+  private router = inject(Router)
+
+  errorMessage = signal<string | null>(null);
+  isSubmitting = signal(false);
+
+  constructor(){}
+  
   ngOnInit(): void {
     this.authService.auth_page="Login"
     if(isPlatformBrowser(this.platformID)){
       localStorage.setItem("current_auth_page", this.authService.auth_page)
     }
-
   }
-  login(){
-    if(this.authService.authForm.valid){
-      // console.log(this.authService.authForm.value)
-      console.log("This is the login email: ", )
-      this.loginService.login(this.authService.authForm.value.email, this.authService.authForm.value.password)
-      .then((res) => {
-        if(res.error){
-          console.log(res.error.message)
-          alert("Login Failed!")
-        }
-        else{
-          console.log(res.data)
-          alert("Login Successful")
-          // this.router.navigate(['/uploadResume'])  
-        }
-      })
+
+  loginWithGoogle() {
+    this.loginService.loginWithGoogle();
+  }
+
+  loginUser(credentials: LoginPayload) {
+    this.errorMessage.set(null);
+
+    if (this.authService.authForm.invalid) {
+      this.authService.authForm.markAllAsTouched();
+      this.errorMessage.set('Enter a valid email address and password before logging in.');
+      return;
     }
+
+    if (this.isSubmitting()) {
+      return;
+    }
+
+    this.isSubmitting.set(true);
+
+    return firstValueFrom(
+      this.http.post(
+        `${environment.apiUrl}/api/auth/login`,
+        { login_email: credentials.email, login_password: credentials.password },
+        { withCredentials: true } 
+      )
+    )
+    .then((res) => {
+      this.router.navigate(['/uploadResume']);
+      
+    })
+    .catch((err) => {
+      console.log("Login failed:", err);
+      this.errorMessage.set(err?.error?.detail || "Login failed. Please try again.");
+    })
+    .finally(() => {
+      this.isSubmitting.set(false);
+    });
   }
 }

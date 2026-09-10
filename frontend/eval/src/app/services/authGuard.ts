@@ -1,54 +1,29 @@
 import { inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { CanActivateFn, Router } from '@angular/router';
-import { firstValueFrom, filter, timeout, catchError, of } from 'rxjs';
-import { Supabase } from './supabase/supabase';
+import { Auth } from './auth';
 
 export const authGuard: CanActivateFn = async (route, state) => {
   const platformId = inject(PLATFORM_ID);
-  const supabaseService = inject(Supabase);
+  const authService = inject(Auth);
   const router = inject(Router);
 
-  // If we are on the server, just let it pass (the real check happens in the browser)
+  // On the server, just let it pass — the real check happens in the browser
   if (!isPlatformBrowser(platformId)) {
-    return true; 
+    return true;
   }
 
-  // try {
-  //   // Now it is safe to use window-related logic or async auth checks
-  //   const user = await firstValueFrom(
-  //     supabaseService.currentUser.pipe(
-  //       filter(val => val !== undefined),
-  //       timeout(5000),
-  //       catchError(() => of(null))
-  //     )
-  //   );
+  console.log("authGuard: starting check...");
 
-  //   if (user) return true;
-
-  //   // Check for PKCE code in the URL safely
-  //   if (window.location.search.includes('code=')) {
-  //       return true; 
-  //   }
-
-  //   return router.createUrlTree(['/auth/login']);
-  // } catch (e) {
-  //   return router.createUrlTree(['/auth/login']);
-  // }
 
   try {
-  const { data: { session } } = await supabaseService.supabase.auth.getSession();
+    const res: any = await authService.checkAuthStatus();
+    console.log("authGuard: checkAuthStatus succeeded:", res);
 
-  if (session?.user) {
-    return true; 
-  }
-
-  if (window.location.search.includes('code=')) {
-    return true; 
-  }
-
-  return router.createUrlTree(['/auth/login']);
+    authService.currentUser = res.user;
+    return true;
   } catch (e) {
+    console.log("authGuard: checkAuthStatus FAILED:", e);
     return router.createUrlTree(['/auth/login']);
   }
 };

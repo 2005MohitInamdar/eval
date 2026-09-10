@@ -1,4 +1,5 @@
-# ✅
+# auth.py
+
 import os
 from supabase import create_client, Client
 from supabase_auth.errors import AuthApiError
@@ -11,11 +12,14 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 url:str = os.getenv("SUPABASE_PROJECT_URL")
-service_role:str = os.getenv("SUPABASE_SERVICE_ROLE")
-supabase: Client = create_client(url, service_role)
+publishable_key:str = os.getenv("SUPABASE_PUBLISHABLE_KEY")
 
-if not url or not service_role:
+
+if not url or not publishable_key:
     raise EnvironmentError("Supabase Service role or Key not found in .env")
+
+supabase: Client = create_client(url, publishable_key)
+
 
 def execute_auth_action(action_func, success_msg=None):
     try:
@@ -59,3 +63,20 @@ def execute_auth_action(action_func, success_msg=None):
             "data": None,
             "error": str(e)
         }
+
+# def get_scoped_client(access_token: str) -> Client:
+#     client = create_client(url, publishable_key)
+#     client.postgrest.auth(access_token)
+#     client.storage._client.headers["Authorization"] = f"Bearer {access_token}"
+#     return client
+
+
+
+def get_scoped_client(access_token: str):
+    client = create_client(url, publishable_key)
+    client.postgrest.auth(access_token)
+
+    storage_client = client.storage  # build ONCE
+    storage_client._client.headers["Authorization"] = f"Bearer {access_token}"
+
+    return client, storage_client

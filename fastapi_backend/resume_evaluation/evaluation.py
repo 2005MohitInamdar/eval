@@ -1,3 +1,4 @@
+# evaluation.py
 from dotenv import load_dotenv
 import os
 import asyncio
@@ -30,9 +31,4 @@ async def resume_evaluation(user_input):
         logging.error(f"Stream interrupted by error", exc_info=True)
         yield f"Server Error: {str(e)}"
     
-# async def main():
-#     async for token in resume_evaluation("Write an essay on cat in 500 words!"):
-#         print(token, end="", flush=True)
 
-# if __name__ == "__main__":
-#     asyncio.run(main())

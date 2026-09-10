@@ -44,12 +44,12 @@
     "@angular/build": "^21.2.1",
     "@angular/cli": "^21.1.0",
     "@angular/compiler-cli": "^21.2.1",
-    "@tailwindcss/postcss": "^4.2.1",
+    "@tailwindcss/postcss": "^4.3.3",
     "@types/express": "^5.0.1",
     "@types/node": "^20.19.37",
     "jsdom": "^27.1.0",
-    "postcss": "^8.5.8",
-    "tailwindcss": "^4.2.1",
+    "postcss": "^8.5.28",
+    "tailwindcss": "^4.3.3",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
   }

@@ -84,15 +84,34 @@ export class ConfirmResume implements OnInit{
   ngOnInit():void{
     if(isPlatformBrowser(this.platformid)){
       this.raw_data = localStorage.getItem("resume_data")
-      const parsedData = JSON.parse(this.raw_data)
+      if (!this.raw_data) {
+        console.warn("No resume data found, redirecting to upload.");
+        this.router.navigate(['/uploadResume']);
+        return;
+      }
+      // const parsedData = JSON.parse(this.raw_data)
+      let parsedData;
+      try {
+        parsedData = JSON.parse(this.raw_data);
+      } catch (e) {
+        console.error("Corrupted resume data:", e);
+        this.router.navigate(['/uploadResume']);
+        return;
+      }
       const placeholder_data = parsedData
       this.resume_data = placeholder_data as ResumeEntries;
       
 
       this.setEducation(this.resume_data.education);
-      this.setFieldValue("technical_skills", this.resume_data.skills[0].technical_skills)
-      this.setFieldValue("soft_skills", this.resume_data.skills[0].soft_skills)
-      this.setFieldValue("projects", this.resume_data.projects)
+      const skills = this.resume_data.skills?.[0];
+      if (skills) {
+        this.setFieldValue("technical_skills", skills.technical_skills ?? []);
+        this.setFieldValue("soft_skills", skills.soft_skills ?? []);
+      }
+      // this.setFieldValue("technical_skills", this.resume_data.skills[0].technical_skills)
+      // this.setFieldValue("soft_skills", this.resume_data.skills[0].soft_skills)
+      // this.setFieldValue("projects", this.resume_data.projects)
+      this.setFieldValue("projects", this.resume_data.projects ?? [])
       this.setExperience(this.resume_data.experience)
       
       this.resume.patchValue({
@@ -109,8 +128,6 @@ export class ConfirmResume implements OnInit{
   
   constructor(){} 
   
-
-  
   fieldArray(field: string):FormArray {
     return this.resume.get(field) as FormArray;
   }
@@ -122,7 +139,6 @@ export class ConfirmResume implements OnInit{
       targetField.push(new FormControl(d))
     })
   }
-
 
   get educationArray(): FormArray {
     return this.resume.get('education') as FormArray;
@@ -136,16 +152,22 @@ export class ConfirmResume implements OnInit{
       year_of_passing:   new FormControl(edu?.year_of_passing ?? ''),
     });
   }
-
   
-  setEducation(educationData: any[]) {
-    // this.educationArray.clear(); 
+  // setEducation(educationData: any[]) {
 
+  //   educationData.forEach(edu => {
+  //     this.educationArray.push(this.createEducationGroup(edu));
+  //   });
+  // }
+  setEducation(educationData: any[]) {
+    if (!educationData) {
+      console.warn("No education data found!");
+      return;
+    }
     educationData.forEach(edu => {
       this.educationArray.push(this.createEducationGroup(edu));
     });
   }
-
 
   educationSave(){
     this.setEducation(this.edu)
@@ -178,10 +200,7 @@ export class ConfirmResume implements OnInit{
     return this.resume.get('experience') as FormArray;
   }
   
- 
-
   createExperienceGroup(exp?: any): FormGroup {
-
     return new FormGroup({
       company: new FormControl(exp?.company ?? ''),
       duration: new FormControl(exp?.duration ?? ''),
@@ -205,8 +224,6 @@ export class ConfirmResume implements OnInit{
     });
   }
 
-
-
   saveNewExperience(){
     const fixed_desc_data = this.exp_Description.split(",")
     const final_desc_data = fixed_desc_data.map(desc => desc.trim())
@@ -222,10 +239,8 @@ export class ConfirmResume implements OnInit{
           duration: "",
         }
       ]
-
       this.experienceVisibility = !this.experienceVisibility;
     }
-
   }
 
 
@@ -249,7 +264,6 @@ export class ConfirmResume implements OnInit{
     }
   }
   
-  
   saveNewData(field:string, data:string){
     if(field === "projects"){
       const projArray = this.fieldArray("projects")
@@ -259,7 +273,6 @@ export class ConfirmResume implements OnInit{
       const updated_Array = raw_Array.map(s => s = s.trim());
       this.setFieldValue(field, updated_Array);
     }
-
     switch(field){
       case "soft_skills":
         this.newSoftSkill = "";
@@ -275,7 +288,6 @@ export class ConfirmResume implements OnInit{
         break;
     }
   } 
-
 
   removeExperience(index:number){
     this.experienceArray.removeAt(index);
@@ -299,7 +311,6 @@ export class ConfirmResume implements OnInit{
     }
     this.activeAddPointIndex = null;
   }
-  
 
   confirmResumeData(){
     if(this.resume.valid){

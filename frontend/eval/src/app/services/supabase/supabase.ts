@@ -14,32 +14,15 @@ export class Supabase {
   constructor(){
     this.supabase = createClient(
       environment.supabase.url, 
-      environment.supabase.key,
+      environment.supabase.SUPABASE_SERVICE_ROLE,
       {
         auth: {
-          persistSession: true,
-          autoRefreshToken:true,
-          detectSessionInUrl:true,
+          persistSession: false,
+          autoRefreshToken:false,
+          detectSessionInUrl:false,
           flowType: 'pkce'
         }
       }
     )
-
-
-
-    this.supabase.auth.onAuthStateChange((event, session) => {
-      console.log("onAuthStateChange event fired: ", session?.user)
-      if (session?.user) {
-        this.currentUser.next(session?.user ?? null);
-      } else {
-        this.currentUser.next(null);
-      }
-      if (event === 'SIGNED_OUT') {
-        this.router.navigate(['/auth/login']);
-      }
-      if (event === 'USER_UPDATED' && !session) {
-        this.router.navigate(['/auth/login']);
-      }      
-    })
   }
 }

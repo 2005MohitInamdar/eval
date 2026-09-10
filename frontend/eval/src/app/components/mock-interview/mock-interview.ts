@@ -1,12 +1,15 @@
 import { Component,inject,  ChangeDetectorRef, PLATFORM_ID, OnInit } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { LoginService } from '../../services/login_service/login-service';
 import { HttpClient } from '@angular/common/http';
+import { Auth } from '../../services/auth';
+import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment.development';
 interface MockInterviewResponse {
   status: string;
   question: string;
   audio_url: string;
+  session_id?: string;
 }
 
 @Component({
@@ -20,50 +23,145 @@ export class MockInterview implements OnInit{
   private http = inject(HttpClient)
   private cdr = inject(ChangeDetectorRef)
   private platformid = inject(PLATFORM_ID)
+  private router = inject(Router)
+  private authService = inject(Auth)
 
   first_question:string|null = ""
   user_answer = new FormControl("", [Validators.required])
   interview_type:string|null = "";
-  loggedUserID:string|null = ""
+  session_id:string|null = ""
   interview_role:string|null = "";
   intensity_level:string|null = ""
   new_question = ""
+  isSubmitting = false;
 
 
-  ngOnInit() {
+
+   // --- STT state ---
+  isListening = false;
+  isSpeechSupported = true;
+  private recognition: any = null;
+  private baseTextBeforeListening = ""; // text already in the box before this listening session started
+
+
+async ngOnInit() {
     if(isPlatformBrowser(this.platformid)){
       const audioUrl = localStorage.getItem("first_audio_url");
       this.first_question = localStorage.getItem("first_question") ?? ""
       this.interview_type = localStorage.getItem("interview_type") ?? ""
       this.interview_role = localStorage.getItem("interview_role") ?? ""
       this.intensity_level = localStorage.getItem("intensity_level")
-      this.loggedUserID = localStorage.getItem("loggedUserID") ?? ""
+      this.session_id = localStorage.getItem("interview_session_id")
+
+      try {
+        await this.authService.checkAuthStatus();
+      } catch (err) {
+        console.log("Not logged in:", err);
+        this.router.navigate(['/auth/login']);
+        return;
+      }
       if (audioUrl) {
         const audio = new Audio(audioUrl);
         audio.load();
         audio.play().catch(err => console.log("Autoplay was blocked by browser:", err));
       }
-      
+      this.initSpeechRecognition();
     }
   }
 
+
+
+
+  private initSpeechRecognition() {
+    const SpeechRecognitionCtor =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognitionCtor) {
+      this.isSpeechSupported = false;
+      console.log("Speech Recognition not supported in this browser.");
+      return;
+    }
+
+    this.recognition = new SpeechRecognitionCtor();
+    this.recognition.continuous = true;      // keep listening until manually stopped
+    this.recognition.interimResults = true;  // show live partial results as user speaks
+    this.recognition.lang = "en-US";
+
+    this.recognition.onresult = (event: any) => {
+      let interimTranscript = "";
+      let finalTranscript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+
+      // Combine what was already in the box + finalized speech + live interim speech
+      const combined = (this.baseTextBeforeListening + " " + finalTranscript + " " + interimTranscript).trim();
+      this.user_answer.setValue(combined);
+      this.cdr.detectChanges();
+
+      // Once a chunk is finalized, "commit" it so it doesn't get overwritten by future interim results
+      if (finalTranscript) {
+        this.baseTextBeforeListening = (this.baseTextBeforeListening + " " + finalTranscript).trim();
+      }
+    };
+
+    this.recognition.onerror = (event: any) => {
+      console.log("Speech recognition error:", event.error);
+      this.isListening = false;
+      this.cdr.detectChanges();
+    };
+
+    this.recognition.onend = () => {
+      this.isListening = false;
+      this.cdr.detectChanges();
+    };
+  }
+
+  toggleListening() {
+    if (!this.recognition) return;
+
+    if (this.isListening) {
+      this.recognition.stop();
+      this.isListening = false;
+    } else {
+      this.baseTextBeforeListening = this.user_answer.value ?? "";
+      this.recognition.start();
+      this.isListening = true;
+    }
+    this.cdr.detectChanges();
+  }
+
+
+
   async submit(){
-    const payload = {
-      "first_question" : this.first_question,
-      "answer": this.user_answer.value,
-      "interview_type": this.interview_type,
-      "interview_role": this.interview_role,
-      "loggedUserID": this.loggedUserID,
-      "intensity_level" : this.intensity_level
+
+    if (this.isListening) {
+      this.recognition.stop();
+      this.isListening = false;
     }
 
 
-    this.new_question = "";       
-    this.first_question = "";     
-    this.user_answer.reset();     
-    this.cdr.detectChanges();
+    if (!this.session_id || !this.first_question || !this.user_answer.value?.trim()) {
+      alert('A session, question, and answer are required to continue.');
+      return;
+    }
 
-    this.http.post<MockInterviewResponse>("http://127.0.0.1:8000/next_qt", payload).subscribe({
+    const payload = {
+      "session_id": this.session_id,
+      "first_question" : this.first_question,
+      "answer": this.user_answer.value
+    }
+
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
+    this.http.post<MockInterviewResponse>(`${environment.apiUrl}/next_qt`, payload, {withCredentials:true}).subscribe({
       next: (res) => {
         console.log(res.audio_url)
         if (res.audio_url) {
@@ -75,6 +173,9 @@ export class MockInterview implements OnInit{
           audio.play().catch(err => console.log("Audio playback blocked or failed:", err));
         }
         this.new_question = res.question
+        this.first_question = res.question;
+        this.user_answer.reset();
+        this.isSubmitting = false;
         
         if(isPlatformBrowser(this.platformid)){
           localStorage.setItem("first_question", this.new_question)
@@ -83,7 +184,11 @@ export class MockInterview implements OnInit{
         this.cdr.detectChanges();
       },
       error : (err) => {
-        console.log(err)
+        // console.log(err)
+        console.log(err);
+        const message = err.error?.detail || err.message || "An unexpected error occurred";
+        this.isSubmitting = false;
+        alert(message);
       }
     })
   }

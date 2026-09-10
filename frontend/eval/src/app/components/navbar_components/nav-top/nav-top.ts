@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
-import { LucideAngularModule, User, Settings, LogOut } from 'lucide-angular';
+import { LucideAngularModule, User, Settings, LogOut, Menu,  } from 'lucide-angular';
 import { SignupService } from '../../../services/signup_service/signup-service';
 import { Router } from '@angular/router';
+import { Auth } from '../../../services/auth';
 @Component({
   selector: 'app-nav-top',
   standalone:true, 
@@ -10,21 +11,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./nav-top.scss'],
 })
 export class NavTop {
-  signupService = inject(SignupService)
+  private signupService = inject(SignupService)
+  private authService = inject(Auth)
+  
   private router = inject(Router)
   readonly ProfileIcon = User;
   readonly SettingsIcon = Settings;
   readonly LogoutIcon = LogOut;
+  readonly MenuIcon = Menu;
 
-  logout(){
-    this.signupService.signoutUser().
-    then((res) => {
-      console.log(res)
-      alert("User logged out successfully!")
-      this.router.navigate(['/auth/login'], { queryParams: {} });
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  async logoutUser() {
+    try {
+      await this.authService.logout();
+      this.authService.currentUser = null;
+      this.router.navigate(['/auth/login']);
+    } catch (err) {
+      console.log("Logout failed:", err);
+    }
   }
 }

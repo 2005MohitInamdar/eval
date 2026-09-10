@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { Inject, PLATFORM_ID } from '@angular/core';
+import { inject, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root',
 })
 export class Auth {
-  authForm!:FormGroup;
   private localStorage: Storage | undefined;  
+  private http = inject(HttpClient);
+  
+  authForm!:FormGroup;
   auth_page:string = "";
+  currentUser: any = null;
   
   constructor(private fb:FormBuilder, @Inject(PLATFORM_ID) private platformId: Object){
     this.localStorageSSRError()
@@ -22,7 +28,6 @@ export class Auth {
     }
 
 
-  // function to handle name controller 
   handleNameController(){
     if(this.auth_page === "Login"){
       this.authForm.removeControl("name")
@@ -33,7 +38,6 @@ export class Auth {
   
   
 
-  // formGroup for login/signup
   initForm(){
     this.authForm = this.fb.group({
       name: ["", [Validators.required, Validators.minLength(2), Validators.pattern("^[a-zA-Z-' ]+$")]], 
@@ -42,6 +46,32 @@ export class Auth {
     })
   }
 
-  // authGuard canMatch
-  
+  // checkAuthStatus() {
+  //   return firstValueFrom(
+  //     this.http.get(`${environment.apiUrl}/api/auth/me`, { withCredentials: true })
+  //   );
+  // }
+
+  async checkAuthStatus() {
+    try {
+      const res: any = await firstValueFrom(
+        this.http.get(`${environment.apiUrl}/api/auth/me`, { withCredentials: true })
+      );
+      this.currentUser = res.user;
+      return res;
+    } catch (err) {
+      this.currentUser = null;
+      throw err;
+    }
+  }
+
+
+  // auth.ts
+  async logout() {
+    const res = await firstValueFrom(
+      this.http.post(`${environment.apiUrl}/api/auth/logout`, {}, { withCredentials: true })
+    );
+    this.currentUser = null;
+    return res;
+  }
 } 

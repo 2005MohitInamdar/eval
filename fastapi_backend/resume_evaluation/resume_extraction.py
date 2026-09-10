@@ -1,3 +1,5 @@
+# resume_extraction.py
+
 import io
 import os
 import uuid
@@ -17,7 +19,6 @@ logging.basicConfig(level=logging.INFO)
 
 client = LlamaCloud(api_key=os.getenv("LLAMA_CLOUD_API_KEY"))
 # print(dir(client))``
-files = client.files.list()
 
 
 if(not client):

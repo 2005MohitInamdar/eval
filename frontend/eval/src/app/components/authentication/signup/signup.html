@@ -1,15 +1,38 @@
-<div class="flex justify-center items-center flex-col bg-black text-white h-screen">
-    <div class="border p-10">
-        <h1 >Create Account!</h1>
-        <div class="mt-5">
-            <app-auth-ui-wrapper>
-                <div>
-                    <button type="submit" (click)="signup()" class="mt-5 border px-5 py-1">Signup</button>
-                    <div class="mt-5">
-                        <p>Already have an account?<a routerLink="/auth/login" class="cursor-pointer mx-5"><u>Signup</u></a></p>
-                    </div>
-                </div>
-            </app-auth-ui-wrapper>
+<div class="min-h-screen bg-white text-slate-900 flex items-center justify-center">
+    <div class="w-[80%] py-[15vh]">
+        <div class="flex items-center gap-5 mb-12 fade-in" style="animation-delay: 0ms;">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-300">
+                <span class="text-white font-black text-3xl">E</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-black text-slate-900 tracking-tight">Create Account!</h1>
         </div>
+        <app-auth-ui-wrapper>
+            <div class="h-full flex flex-col justify-between">
+                <button
+                    type="submit"
+                    [disabled]="isSubmitting()"
+                    (click)="signup()"
+                    class="w-full mt-4 py-5 bg-orange-500 text-white font-black text-3xl rounded-xl hover:bg-orange-600 transition-all duration-300 flex items-center justify-center shadow-lg shadow-orange-500/25 fade-in disabled:opacity-50 disabled:cursor-not-allowed"
+                    style="animation-delay: 400ms;"
+                >
+                    {{ isSubmitting() ? 'Creating account...' : 'Signup!' }}
+                </button>
+                @if (errorMessage()) {
+                    <p class="text-red-500 text-sm font-medium text-center mt-3 fade-in">
+                        {{ errorMessage() }}
+                    </p>
+                }
+                <div class="mb-4 text-center fade-in" style="animation-delay: 500ms;">
+                    <p class="text-xl text-slate-500 mb-3 font-medium">Already have an account?</p>
+                    <a 
+                        routerLink="/auth/login" 
+                        class="block w-full py-5 bg-orange-100 text-orange-700 font-bold text-2xl rounded-xl hover:bg-orange-200 transition-all duration-300 flex items-center justify-center cursor-pointer"
+                    >
+                        Login
+                    </a>
+                </div>
+            </div>
+        </app-auth-ui-wrapper>
     </div>
 </div>
+

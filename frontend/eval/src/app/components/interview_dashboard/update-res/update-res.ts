@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { Supabase } from '../../../services/supabase/supabase';
 import { FormsModule } from '@angular/forms';
 import { LoginService } from '../../../services/login_service/login-service';
+import { Auth } from '../../../services/auth';
+// import {}
 @Component({
   selector: 'app-update-res',
   imports: [DragnDrop, CommonModule, FormsModule],
@@ -13,7 +15,8 @@ import { LoginService } from '../../../services/login_service/login-service';
   styleUrl: './update-res.scss',
 })
 export class UpdateRes implements OnInit{
-    private loginService = inject(LoginService)
+  private loginService = inject(LoginService)
+  private authService = inject(Auth)
   desired_company:string = ""
   desired_role:string = ""
 
@@ -105,15 +108,14 @@ export class UpdateRes implements OnInit{
           'mime_type' : file.type
         }
 
-        this.http.post('http://127.0.0.1:8000/uploadedResume', payload).subscribe({
+        this.http.post('http://localhost:8000/uploadedResume', payload).subscribe({
           next: async (res:any) => {
             const response_data = res.extracted_resume_details
-            // console.log(JSON.stringify(response_data))
-
             localStorage.setItem("resume_data", JSON.stringify(response_data))
 
-            const getuser = await this.loginService.getCurrentUser();
-            const userID = getuser?.id;
+            const getuser = await this.authService.checkAuthStatus();;
+            const currentUser = res.user;
+            const userID = currentUser.id;
             if(isPlatformBrowser(this.platformId)){
               localStorage.setItem("desired_company", this.desired_company)
               localStorage.setItem("desired_role", this.desired_role)

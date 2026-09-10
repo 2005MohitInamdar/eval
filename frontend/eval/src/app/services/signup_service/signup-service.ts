@@ -9,25 +9,4 @@ export class SignupService {
   
   supabaseService = inject(Supabase)
   
-  signupUser(userData:any){
-    const userName = userData.name
-    const email = userData.email
-    const password = userData.password
-      return this.supabaseService.supabase.auth.signUp(
-        {
-          email: email,
-          password: password,
-          options: {
-            emailRedirectTo: 'http://localhost:4200/uploadResume',
-            data: {
-              name: userName
-            }
-          }
-        }
-      )
-    } 
-
-    signoutUser(){
-      return this.supabaseService.supabase.auth.signOut()
-    }
 }

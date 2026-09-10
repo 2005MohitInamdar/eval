@@ -10,48 +10,9 @@ import { isPlatformBrowser } from '@angular/common'; // Important import
 })
 export class SplashScreen {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
-  // This links the #videoElement from HTML to this variable
   @ViewChild('videoElement') videoElement!: ElementRef<HTMLVideoElement>;
-  
-  // This links the #canvasElement from HTML to this variable
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
-  // ngAfterViewInit() {
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     const video = this.videoElement.nativeElement;
-  //     const canvas = this.canvasElement.nativeElement;
-  //     const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-  //     video.play();
-
-  //     const processFrame = () => {
-  //       if (video.paused || video.ended) return;
-        
-  //       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-        
-  //       let frame = ctx?.getImageData(0, 0, canvas.width, canvas.height);
-  //       if (frame) {
-  //         let l = frame.data.length / 4;
-          
-  //         for (let i = 0; i < l; i++) {
-  //           let r = frame.data[i * 4 + 0];
-  //           let g = frame.data[i * 4 + 1];
-  //           let b = frame.data[i * 4 + 2];
-            
-  //           // Chroma Key Logic: If pixel is "Greenish", set Alpha to 0
-  //           if (g > 100 && g > r * 1.2 && g > b * 1.2) {
-  //             frame.data[i * 4 + 3] = 0;
-  //           }
-  //         }
-  //         ctx?.putImageData(frame, 0, 0);
-  //       }
-  //       requestAnimationFrame(processFrame);
-  //     };
-
-  //     video.addEventListener('play', processFrame);
-  //   }
-  // }
-
-
+  
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {

@@ -23,7 +23,13 @@ log_interview_start this is what we implemented last this is in qg.py
 
 
 
+<!-- <textarea
+                        class="w-full h-full bg-transparent border-0 outline-none p-4 text-slate-900 placeholder-slate-400 text-sm resize-none disabled:bg-slate-50 disabled:cursor-not-allowed"
+                        placeholder="Type your answer or click 'Speak Answer' to talk..."
+                        [disabled]="isSubmitting"
+                        [formControl]="user_answer"></textarea> -->
 
+mock_interview.html
 
 
 

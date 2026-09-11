@@ -139,13 +139,67 @@ async ngOnInit() {
 
 
 
+  // async submit(){
+
+  //   if (this.isListening) {
+  //     this.recognition.stop();
+  //     this.isListening = false;
+  //   }
+
+
+  //   if (!this.session_id || !this.first_question || !this.user_answer.value?.trim()) {
+  //     alert('A session, question, and answer are required to continue.');
+  //     return;
+  //   }
+
+  //   const payload = {
+  //     "session_id": this.session_id,
+  //     "first_question" : this.first_question,
+  //     "answer": this.user_answer.value
+  //   }
+
+  //   if (this.isSubmitting) return;
+  //   this.isSubmitting = true;
+
+  //   this.http.post<MockInterviewResponse>(`${environment.apiUrl}/next_qt`, payload, {withCredentials:true}).subscribe({
+  //     next: (res) => {
+  //       console.log(res.audio_url)
+  //       if (res.audio_url) {
+  //         if(isPlatformBrowser(this.platformid)){
+  //           localStorage.setItem("first_audio_url", res.audio_url)
+  //         }
+  //         const audio = new Audio(res.audio_url);
+  //         audio.load();
+  //         audio.play().catch(err => console.log("Audio playback blocked or failed:", err));
+  //       }
+  //       this.new_question = res.question
+  //       this.first_question = res.question;
+  //       this.user_answer.reset();
+  //       this.isSubmitting = false;
+        
+  //       if(isPlatformBrowser(this.platformid)){
+  //         localStorage.setItem("first_question", this.new_question)
+
+  //       }
+  //       this.cdr.detectChanges();
+  //     },
+  //     error : (err) => {
+  //       // console.log(err)
+  //       console.log(err);
+  //       const message = err.error?.detail || err.message || "An unexpected error occurred";
+  //       this.isSubmitting = false;
+  //       alert(message);
+  //     }
+  //   })
+  // }
+
+
   async submit(){
 
     if (this.isListening) {
       this.recognition.stop();
       this.isListening = false;
     }
-
 
     if (!this.session_id || !this.first_question || !this.user_answer.value?.trim()) {
       alert('A session, question, and answer are required to continue.');
@@ -160,6 +214,7 @@ async ngOnInit() {
 
     if (this.isSubmitting) return;
     this.isSubmitting = true;
+    this.user_answer.disable();   // <-- added
 
     this.http.post<MockInterviewResponse>(`${environment.apiUrl}/next_qt`, payload, {withCredentials:true}).subscribe({
       next: (res) => {
@@ -176,18 +231,18 @@ async ngOnInit() {
         this.first_question = res.question;
         this.user_answer.reset();
         this.isSubmitting = false;
-        
+        this.user_answer.enable();   // <-- added
+
         if(isPlatformBrowser(this.platformid)){
           localStorage.setItem("first_question", this.new_question)
-
         }
         this.cdr.detectChanges();
       },
       error : (err) => {
-        // console.log(err)
         console.log(err);
         const message = err.error?.detail || err.message || "An unexpected error occurred";
         this.isSubmitting = false;
+        this.user_answer.enable();   // <-- added
         alert(message);
       }
     })

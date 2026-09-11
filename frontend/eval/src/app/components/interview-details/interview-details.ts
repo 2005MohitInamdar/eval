@@ -33,13 +33,17 @@ export class InterviewDetails {
   interview_type:string = "";
   interview_role = new FormControl("", [Validators.required]);
   intensity_level = new FormControl("", [Validators.required]);
-
+  
+  isSubmitting = false      // <-- new
+  errorMessage = ""         // <-- new
+  
   interviewType(value:string){
     this.interview_type = value 
   }
 
   async start_interview(){
     console.log("interview component navigated!")
+    if (this.isSubmitting) return   // <-- new: guard double-submit
 
     try {
       await this.authService.checkAuthStatus();
@@ -54,6 +58,8 @@ export class InterviewDetails {
       this.intensity_level.markAsTouched();
       return;
     }
+    this.errorMessage = ""     // <-- new: clear any previous error
+    this.isSubmitting = true   // <-- new
 
     const payload = {
       "interview_type" : this.interview_type,
@@ -81,6 +87,8 @@ export class InterviewDetails {
         console.log(err); // keep this for full debugging detail in the console
         const message = err.error?.detail || err.message || "An unexpected error occurred";
         console.log("error message: " , message);
+        this.errorMessage = message   // <-- new: surface it to the user
+        this.isSubmitting = false     // <-- new: allow retry
       }
     })
   }

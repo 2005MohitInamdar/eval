@@ -1,1 +1,49 @@
-<p>profile works!</p>
+<!-- <p>profile works!</p> -->
+
+
+<div class="min-h-screen bg-slate-50 p-8 space-y-8">
+
+  <!-- Header -->
+  <div class="fade-in" style="animation-delay: 0ms;">
+    <h1 class="text-3xl font-black text-slate-900 tracking-tight">Profile</h1>
+    <p class="text-slate-500 mt-1">Your account details and progress.</p>
+  </div>
+
+  <!-- Profile card -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-8 fade-in" style="animation-delay: 100ms;">
+    <div class="flex items-center gap-5">
+      <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-300">
+        <span class="text-white font-black text-3xl">{{ fullName.charAt(0) }}</span>
+      </div>
+      <div>
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight">{{ fullName }}</h2>
+        <p class="text-slate-500">{{ email }}</p>
+        <p class="text-sm text-slate-400 mt-1">{{ joinedOn }}</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-8 border-t border-slate-100">
+      <div *ngFor="let stat of stats" class="text-center sm:text-left">
+        <p class="text-2xl font-black text-slate-900">{{ stat.value }}</p>
+        <p class="text-sm text-slate-500 font-medium">{{ stat.label }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account actions -->
+  <div class="bg-white border border-slate-200 rounded-2xl p-6 space-y-1 fade-in" style="animation-delay: 200ms;">
+    <button routerLink="/ui_wrapper/settings" class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-orange-50 transition-colors group">
+      <span class="font-medium text-slate-700 group-hover:text-orange-600">Account Settings</span>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400 group-hover:text-orange-600">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+    <button routerLink="/ui_wrapper/resume" class="w-full flex items-center justify-between px-4 py-3 rounded-xl hover:bg-orange-50 transition-colors group">
+      <span class="font-medium text-slate-700 group-hover:text-orange-600">Resume</span>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-slate-400 group-hover:text-orange-600">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+      </svg>
+    </button>
+  </div>
+
+</div>

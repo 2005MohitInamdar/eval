@@ -6,10 +6,9 @@ import { UpdatePassword } from './components/authentication/auth_functions/updat
 import { VerifyEmail } from './components/authentication/auth_functions/verify-email/verify-email'; 
 import { Wait } from './components/authentication/auth_functions/wait/wait';
 import { ForgotPassword } from './components/authentication/auth_functions/forgot-password/forgot-password'; 
-// import { MockInterview } from './components/mock-interview/mock-interview';
 import { authGuard } from './services/authGuard';
 import { guestGuard } from './services/guestGuard';
-// import { UploadResume } from './components/user_Onboarding/upload-resume/upload-resume';
+
 export const routes: Routes = [
     {path: "", redirectTo: 'welcome', pathMatch: 'full'}, 
     {path: "welcome", component: SplashScreen, title: "Tutorials page"},      
@@ -42,12 +41,10 @@ export const routes: Routes = [
       // app.routes.ts
 
     {path: 'auth/signup', component: Signup, title: "SignUp page", canActivate: [guestGuard]},
-    // {path: 'auth/wait', component: Wait, title: "waiting page"},
     {path: "auth/login", component: Login, title: "Login page", canActivate: [guestGuard]},
     {path: "auth/verify_email", component: VerifyEmail, title: "Email Verification page"},
     {path: "auth/update_password", component: UpdatePassword, title: "Update Password page"},
     {path: "auth/forgot_password", component: ForgotPassword, title: "Forgot Password page"},
-    // {path: 'MockInterview', component: MockInterview, title: 'Mock Interview Page'},
     {
       path: "MockInterview",
       title: "MOCK interview Page",
@@ -77,21 +74,21 @@ export const routes: Routes = [
               title: "AI Evaluation Page",
               loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/evaluation-report/evaluation-report').then(m => m.EvaluationReport)
             },
-            {
-              path: "completed_interviews", 
-              title: "Completed Interviews Page",
-              loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/completed-interviews/completed-interviews').then(m => m.CompletedInterviews)
-            },
+            // {
+            //   path: "completed_interviews", 
+            //   title: "Completed Interviews Page",
+            //   loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/completed-interviews/completed-interviews').then(m => m.CompletedInterviews)
+            // },
             {
               path: "remaining_interviews", 
               title: "Remaining Interviews Page",
               loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/remaining-interviews/remaining-interviews').then(m => m.RemainingInterviews)
             },
-            {
-              path: "notifications", 
-              title: "Notifications Page",
-              loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/notifications/notifications').then(m => m.Notifications)
-            },
+            // {
+            //   path: "notifications", 
+            //   title: "Notifications Page",
+            //   loadComponent: () =>  import('./components/interview_dashboard/dashboard_functions/notifications/notifications').then(m => m.Notifications)
+            // },
             {
               path: "resume", 
               title: "Resume Page",

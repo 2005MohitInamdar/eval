@@ -76,7 +76,7 @@ export class Resume implements OnInit{
   }
 
   update_resume(){
-    this.router.navigate(['/ui_wrapper/UpdateRes'])
+    // this.router.navigate(['/ui_wrapper/UpdateRes'])
+    this.router.navigate(['/uploadResume'])
   }
-
 }

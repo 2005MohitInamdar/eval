@@ -37,11 +37,10 @@ export class MockInterview implements OnInit{
 
 
 
-   // --- STT state ---
   isListening = false;
   isSpeechSupported = true;
   private recognition: any = null;
-  private baseTextBeforeListening = ""; // text already in the box before this listening session started
+  private baseTextBeforeListening = ""; 
 
 
 async ngOnInit() {
@@ -69,9 +68,6 @@ async ngOnInit() {
     }
   }
 
-
-
-
   private initSpeechRecognition() {
     const SpeechRecognitionCtor =
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -83,8 +79,8 @@ async ngOnInit() {
     }
 
     this.recognition = new SpeechRecognitionCtor();
-    this.recognition.continuous = true;      // keep listening until manually stopped
-    this.recognition.interimResults = true;  // show live partial results as user speaks
+    this.recognition.continuous = true;      
+    this.recognition.interimResults = true;  
     this.recognition.lang = "en-US";
 
     this.recognition.onresult = (event: any) => {
@@ -100,12 +96,10 @@ async ngOnInit() {
         }
       }
 
-      // Combine what was already in the box + finalized speech + live interim speech
       const combined = (this.baseTextBeforeListening + " " + finalTranscript + " " + interimTranscript).trim();
       this.user_answer.setValue(combined);
       this.cdr.detectChanges();
 
-      // Once a chunk is finalized, "commit" it so it doesn't get overwritten by future interim results
       if (finalTranscript) {
         this.baseTextBeforeListening = (this.baseTextBeforeListening + " " + finalTranscript).trim();
       }
@@ -137,63 +131,6 @@ async ngOnInit() {
     this.cdr.detectChanges();
   }
 
-
-
-  // async submit(){
-
-  //   if (this.isListening) {
-  //     this.recognition.stop();
-  //     this.isListening = false;
-  //   }
-
-
-  //   if (!this.session_id || !this.first_question || !this.user_answer.value?.trim()) {
-  //     alert('A session, question, and answer are required to continue.');
-  //     return;
-  //   }
-
-  //   const payload = {
-  //     "session_id": this.session_id,
-  //     "first_question" : this.first_question,
-  //     "answer": this.user_answer.value
-  //   }
-
-  //   if (this.isSubmitting) return;
-  //   this.isSubmitting = true;
-
-  //   this.http.post<MockInterviewResponse>(`${environment.apiUrl}/next_qt`, payload, {withCredentials:true}).subscribe({
-  //     next: (res) => {
-  //       console.log(res.audio_url)
-  //       if (res.audio_url) {
-  //         if(isPlatformBrowser(this.platformid)){
-  //           localStorage.setItem("first_audio_url", res.audio_url)
-  //         }
-  //         const audio = new Audio(res.audio_url);
-  //         audio.load();
-  //         audio.play().catch(err => console.log("Audio playback blocked or failed:", err));
-  //       }
-  //       this.new_question = res.question
-  //       this.first_question = res.question;
-  //       this.user_answer.reset();
-  //       this.isSubmitting = false;
-        
-  //       if(isPlatformBrowser(this.platformid)){
-  //         localStorage.setItem("first_question", this.new_question)
-
-  //       }
-  //       this.cdr.detectChanges();
-  //     },
-  //     error : (err) => {
-  //       // console.log(err)
-  //       console.log(err);
-  //       const message = err.error?.detail || err.message || "An unexpected error occurred";
-  //       this.isSubmitting = false;
-  //       alert(message);
-  //     }
-  //   })
-  // }
-
-
   async submit(){
 
     if (this.isListening) {
@@ -214,7 +151,7 @@ async ngOnInit() {
 
     if (this.isSubmitting) return;
     this.isSubmitting = true;
-    this.user_answer.disable();   // <-- added
+    this.user_answer.disable();   
 
     this.http.post<MockInterviewResponse>(`${environment.apiUrl}/next_qt`, payload, {withCredentials:true}).subscribe({
       next: (res) => {
@@ -231,7 +168,7 @@ async ngOnInit() {
         this.first_question = res.question;
         this.user_answer.reset();
         this.isSubmitting = false;
-        this.user_answer.enable();   // <-- added
+        this.user_answer.enable();   
 
         if(isPlatformBrowser(this.platformid)){
           localStorage.setItem("first_question", this.new_question)
@@ -242,7 +179,7 @@ async ngOnInit() {
         console.log(err);
         const message = err.error?.detail || err.message || "An unexpected error occurred";
         this.isSubmitting = false;
-        this.user_answer.enable();   // <-- added
+        this.user_answer.enable();  
         alert(message);
       }
     })

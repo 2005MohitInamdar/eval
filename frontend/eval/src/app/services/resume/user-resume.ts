@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { Supabase } from '../supabase/supabase';
 
 
 export interface skillsEntry{
@@ -43,7 +42,6 @@ export interface syncResponse  {
 
 
 export class UserResume {
-  private supabaseService = inject(Supabase)
 
   async fileUpload(file:File){
   }

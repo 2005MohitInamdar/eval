@@ -3,14 +3,14 @@
 from langchain_openai import ChatOpenAI
 import os
 import requests
+import logging
 import json
 from dotenv import load_dotenv
 import edge_tts
-from supabase_integration.auth import supabase, get_scoped_client
+from supabase_integration.auth import get_scoped_client
 from .schemas import NextQt
 from datetime import datetime, timezone
 import uuid
-# from ..supabase_integration.auth import url, publishable_key
 from fastapi import HTTPException
 import httpx 
 load_dotenv()
@@ -82,22 +82,17 @@ async def genenrate_questions(user_prompt: str, user_id: str, access_token: str)
     response = await client.ainvoke(user_prompt)
     str_text = str(response.content)
     
-    print("GROQ response generated: ", str_text)
     local_path = await edge_tts_voice(str_text, user_id)
     voice_fileName = f"{user_id}/question.mp3"   # fixed path per user — always overwritten
     voice_fileName = f"{user_id}/{uuid.uuid4().hex}.mp3"
-    print("edge_tts working: ", local_path)
 
     await upload_audio_raw(local_path, voice_fileName, access_token)
-    print("audio saved to supabase")
 
 
-    print("audio saved in supabase")
     audio_url = await create_signed_url("question_audios", voice_fileName, access_token)
 
     if os.path.exists(local_path):
         os.remove(local_path)
-        print("local audio file removed!")
 
     return {
         "text": str(response.content),
@@ -112,7 +107,6 @@ async def evaluate_answer(next_qt: NextQt, user_id: str, access_token: str):
     - include the pain point first as to what is missing or somewhat weak concept in the asnwer and provide a feedback based on it
     - all the points of correction should come under 2 to 4 points. Write the feedback in clear, simple English. Avoid overly dense academic jargon or research-paper terminology while keeping the core technical concepts and industry-standard tools accurate and actionable.
     """)
-    print(response.content)
 
     data = {
         "session_id": str(next_qt.session_id),
@@ -128,9 +122,8 @@ async def evaluate_answer(next_qt: NextQt, user_id: str, access_token: str):
         scoped_client.table("interview_sessions").update({
             "updated_at": datetime.now(timezone.utc).isoformat()
         }).eq("session_id", str(next_qt.session_id)).eq("user_id", user_id).execute()
-        print("Response: ", res)
     except Exception as e:
-        print("Error: ", e)
+        logging.error("Error: ", e)
 
 
 def parse_feedback(content: object) -> object:

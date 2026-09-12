@@ -1,34 +1,10 @@
-<!-- <div class="h-screen">
-    <form>
-        <div class="h-screen flex justify-center items-center flex-col">
-            <label for="">Type of interview</label>
-            <div class="mt-5 ">
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Technical Interview')">Technical Interview</button>
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Behavioral Interview')">Behavioral Interview</button>
-                <button type="button" class="border border-solid cursor-pointer mx-5" (click)="interviewType('Combined')">Combined</button>
-            </div>
-            <div>
-                <h1 class="mt-10">Role: </h1>
-                <input type="text" class="border border-solid " placeholder="Interview for role?" [formControl]="interview_role">
-                <h1 class="mt-10">Intensity Level: </h1>
-                <input type="text" placeholder="Eg: Hard, Medium, Easy level" class="border border-solid"[formControl]="intensity_level">
-            </div>
-            <button type="button" (click)="start_interview()" class="border border-solid mt-10">start</button >
-        </div>
-    </form>
-</div> -->
-
-
-
 <div class="relative min-h-screen bg-white flex items-center justify-center p-6 overflow-hidden">
 
-    <!-- Soft accent glow, matches your other setup screens -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full pointer-events-none bg-orange-100/50 blur-3xl"></div>
 
     <form class="relative z-10">
         <div class="bg-white border border-slate-200 rounded-3xl shadow-xl p-8 md:p-10 space-y-8 w-full max-w-lg">
 
-            <!-- Header -->
             <div class="flex items-center gap-3 fade-in" style="animation-delay: 0ms;">
                 <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-300">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
@@ -41,7 +17,6 @@
                 </div>
             </div>
 
-            <!-- Error banner -->
             <div *ngIf="errorMessage" class="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-4 fade-in" style="animation-delay: 0ms;">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="#EF4444" class="w-5 h-5 flex-shrink-0 mt-0.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3.75h.007v.008H12v-.008zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -49,7 +24,6 @@
                 <p class="text-sm text-red-700 font-medium">{{ errorMessage }}</p>
             </div>
 
-            <!-- Interview type -->
             <div class="space-y-3 fade-in" style="animation-delay: 100ms;">
                 <label class="text-xs font-bold tracking-[0.15em] text-slate-500 uppercase">Type of interview</label>
                 <div class="grid grid-cols-3 gap-3">
@@ -101,7 +75,6 @@
                 <p *ngIf="!interview_type" class="text-xs text-slate-400">Pick one to continue</p>
             </div>
 
-            <!-- Role -->
             <div class="space-y-2 fade-in" style="animation-delay: 150ms;">
                 <label class="text-xs font-bold tracking-[0.15em] text-slate-500 uppercase">Role</label>
                 <input
@@ -120,7 +93,6 @@
                 <p *ngIf="interview_role.invalid && interview_role.touched" class="text-xs text-red-500 font-medium">Role is required</p>
             </div>
 
-            <!-- Intensity -->
             <div class="space-y-2 fade-in" style="animation-delay: 200ms;">
                 <label class="text-xs font-bold tracking-[0.15em] text-slate-500 uppercase">Intensity level</label>
                 <input
@@ -139,7 +111,6 @@
                 <p *ngIf="intensity_level.invalid && intensity_level.touched" class="text-xs text-red-500 font-medium">Intensity level is required</p>
             </div>
 
-            <!-- Start button -->
             <button
                 type="button"
                 (click)="start_interview()"

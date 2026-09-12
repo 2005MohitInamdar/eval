@@ -1,6 +1,5 @@
-# dependencies.py
 from fastapi import Request, HTTPException, status
-from authentication.authenticator import get_supabase_user  # the function from earlier
+from authentication.authenticator import get_supabase_user  
 
 
 def get_current_user(request: Request):

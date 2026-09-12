@@ -13,7 +13,7 @@ export const refreshInterceptor: HttpInterceptorFn = (req, next) => {
   const isAuthEndpoint = req.url.includes('/api/auth/login')
     || req.url.includes('/api/auth/refresh')
     || req.url.includes('/api/auth/signup')
-    || req.url.includes('/api/auth/me');   // must be here
+    || req.url.includes('/api/auth/me');   
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {

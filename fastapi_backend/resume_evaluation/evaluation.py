@@ -1,7 +1,5 @@
-# evaluation.py
 from dotenv import load_dotenv
 import os
-import asyncio
 from langchain_openai import ChatOpenAI
 import logging
 

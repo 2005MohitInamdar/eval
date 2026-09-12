@@ -49,8 +49,7 @@ export class UploadResume implements OnInit{
   }
 
   handleDroppedFiles(file:File){
-    if (this.isUploading) return   // same guard
-
+    if (this.isUploading) return   
     this.fileName = file.name
     this.selectedFile = file
     this.uploadError = null;
@@ -71,9 +70,9 @@ export class UploadResume implements OnInit{
 
     const allowedTypes = [
       'application/pdf',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' // .docx
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' 
     ];
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 
     if (!allowedTypes.includes(file.type)) {
       this.uploadError = 'Please upload a PDF or DOCX file.';
@@ -91,7 +90,6 @@ export class UploadResume implements OnInit{
     try {
       await this.authService.checkAuthStatus();
     } catch (err) {
-      console.log("Not logged in:", err);
       this.isUploading = false;
       this.router.navigate(['/auth/login']);
       return;
@@ -106,7 +104,6 @@ export class UploadResume implements OnInit{
     ).subscribe({
       next: (res: any) => {
         const response_data = res.extracted_resume_details;
-        console.log(JSON.stringify(response_data));
         if (isPlatformBrowser(this.platformId)) {
           localStorage.setItem("resume_data", JSON.stringify(response_data));
           localStorage.setItem("resume_file_name", file.name);
@@ -114,7 +111,6 @@ export class UploadResume implements OnInit{
         this.completion_route();
       },
       error: (err) => {
-        console.log("Upload unsuccessful:", err);
         this.uploadError = err?.error?.detail || 'Resume upload failed. Please try again.';
         alert(this.uploadError);
       }
@@ -124,7 +120,6 @@ export class UploadResume implements OnInit{
   submitResume(){
     if (this.isUploading) return 
 
-    console.log("File selected", this.fileName)
     this.fileUpload(this.selectedFile)
   } 
 }

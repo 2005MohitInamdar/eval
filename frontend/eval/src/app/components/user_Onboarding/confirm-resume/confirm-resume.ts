@@ -44,7 +44,6 @@ export class ConfirmResume implements OnInit{
   activeAddPointIndex: number | null = null;
   newDescriptionPoint: string = "";
 
-
   edu = [
     {
       institution: "",
@@ -53,7 +52,6 @@ export class ConfirmResume implements OnInit{
       year_of_passing: ""
     }
   ]
-
 
   exp = [
     {
@@ -64,7 +62,6 @@ export class ConfirmResume implements OnInit{
     }
   ]
   
-
   resume = new FormGroup ({
     name: new FormControl(""),
     email: new FormControl(),
@@ -89,7 +86,7 @@ export class ConfirmResume implements OnInit{
         this.router.navigate(['/uploadResume']);
         return;
       }
-      // const parsedData = JSON.parse(this.raw_data)
+
       let parsedData;
       try {
         parsedData = JSON.parse(this.raw_data);
@@ -108,9 +105,6 @@ export class ConfirmResume implements OnInit{
         this.setFieldValue("technical_skills", skills.technical_skills ?? []);
         this.setFieldValue("soft_skills", skills.soft_skills ?? []);
       }
-      // this.setFieldValue("technical_skills", this.resume_data.skills[0].technical_skills)
-      // this.setFieldValue("soft_skills", this.resume_data.skills[0].soft_skills)
-      // this.setFieldValue("projects", this.resume_data.projects)
       this.setFieldValue("projects", this.resume_data.projects ?? [])
       this.setExperience(this.resume_data.experience)
       
@@ -153,12 +147,6 @@ export class ConfirmResume implements OnInit{
     });
   }
   
-  // setEducation(educationData: any[]) {
-
-  //   educationData.forEach(edu => {
-  //     this.educationArray.push(this.createEducationGroup(edu));
-  //   });
-  // }
   setEducation(educationData: any[]) {
     if (!educationData) {
       console.warn("No education data found!");

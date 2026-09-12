@@ -1,13 +1,13 @@
 # config.py
 import os
 
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")  # "development" or "production"
+ENVIRONMENT = os.environ.get("ENVIRONMENT", "development")  
 
 IS_PRODUCTION = ENVIRONMENT == "production"
 
 COOKIE_SETTINGS = {
     "httponly": True,
-    "secure": IS_PRODUCTION,                          # True in prod (requires HTTPS)
-    "samesite": "none" if IS_PRODUCTION else "lax",    # "none" needed if frontend/backend are cross-site
+    "secure": IS_PRODUCTION,                         
+    "samesite": "none" if IS_PRODUCTION else "lax",
     "path": "/",
 }

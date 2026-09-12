@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 })
 export class Profile {
   
-  // ---- Placeholder user info — swap with real auth/user service data later ----
   fullName = 'Alex Johnson';
   email = 'alex.johnson@example.com';
   joinedOn = 'Joined September 2026';

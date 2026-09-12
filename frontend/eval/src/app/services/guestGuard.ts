@@ -8,7 +8,6 @@ const platformId = inject(PLATFORM_ID);
   const authService = inject(Auth);
   const router = inject(Router);
 
-  // On the server, just let it pass — the real check happens in the browser
   if (!isPlatformBrowser(platformId)) {
     return true;
   }
@@ -16,8 +15,8 @@ const platformId = inject(PLATFORM_ID);
   try {
     const res: any = await authService.checkAuthStatus();
     authService.currentUser = res.user;
-    return router.createUrlTree(['/uploadResume']); // already logged in, redirect away
+    return router.createUrlTree(['/uploadResume']); 
   } catch (e) {
-    return true; // not logged in, fine to see login/signup
+    return true; 
   }
 }

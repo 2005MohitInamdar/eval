@@ -13,8 +13,8 @@ export class LoginService {
         redirectTo: 'http://localhost:4200/auth/wait'
       }
     });
-    if (error) {
-      console.log("Google sign-in failed:", error.message);
-    }
+    // if (error) {
+    //   console.log("Google sign-in failed:", error.message);
+    // }
   }
 }

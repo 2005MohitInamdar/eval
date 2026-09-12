@@ -1,46 +1,6 @@
 # authenticator.py
 from supabase_integration.auth import supabase
 import os
-# def create_supabase_user(name: str, email: str, password: str):
-#     """
-#     Signs up a user with Supabase Auth, saving the username in user_metadata.
-#     Raises an exception on failure — caller is responsible for handling it.
-#     """
-#     result = supabase.auth.sign_up({
-#         "email": email,
-#         "password": password,
-#         "options": {
-#             "data": {
-#                 "username": name
-#             },
-#             "email_redirect_to": "http://localhost:4200/auth/login"
-#         }
-#     })
-
-#     user = result.user
-#     session = result.session
-
-#     if session is None:
-#         # Email confirmation required — no session/token yet
-#         return {
-#             "message": "Signup successful. Please check your email to confirm your account.",
-#             "user": {
-#                 "id": result.user.id,
-#                 "email": result.user.email,
-#                 "username": name
-#             }
-#         }
-
-#     return {
-#         "message": "Account created successfully",
-#         "user": {
-#             "id": result.user.id,
-#             "email": result.user.email,
-#             "username": name
-#         },
-#         "access_token": session.access_token,
-#         "refresh_token": session.refresh_token
-#     }
 
 FRONTEND_LOGIN_URL = os.environ.get("FRONTEND_LOGIN_URL", "http://localhost:4200/auth/login")
 

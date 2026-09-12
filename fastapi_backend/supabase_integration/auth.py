@@ -1,5 +1,3 @@
-# auth.py
-
 import os
 from supabase import create_client, Client
 from supabase_auth.errors import AuthApiError
@@ -64,19 +62,12 @@ def execute_auth_action(action_func, success_msg=None):
             "error": str(e)
         }
 
-# def get_scoped_client(access_token: str) -> Client:
-#     client = create_client(url, publishable_key)
-#     client.postgrest.auth(access_token)
-#     client.storage._client.headers["Authorization"] = f"Bearer {access_token}"
-#     return client
-
-
 
 def get_scoped_client(access_token: str):
     client = create_client(url, publishable_key)
     client.postgrest.auth(access_token)
 
-    storage_client = client.storage  # build ONCE
+    storage_client = client.storage
     storage_client._client.headers["Authorization"] = f"Bearer {access_token}"
 
     return client, storage_client

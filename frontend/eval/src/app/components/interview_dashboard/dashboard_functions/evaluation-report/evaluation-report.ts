@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 interface InterviewEvaluation {
   role: string;
   type: string;
-  score: number;      // 0-100
+  score: number;     
   date: string;
   questionsAnswered: number;
 }

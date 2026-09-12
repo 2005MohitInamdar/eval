@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Auth } from '../../../services/auth';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment.development';
+
 @Component({
   selector: 'app-selection-page',
   standalone: true, 
@@ -19,7 +20,7 @@ export class SelectionPage {
   private platformid = inject(PLATFORM_ID)
   desired_company:string = ""
   desired_role:string = ""
-  isSubmitting = false   // <-- add this
+  isSubmitting = false   
 
   get_resume_data(){
     return localStorage.getItem("resume_data")
@@ -43,7 +44,6 @@ export class SelectionPage {
       const res: any = await this.authService.checkAuthStatus();
       currentUser = res.user;
     } catch (err) {
-      console.log("Not logged in:", err);
       this.router.navigate(['/auth/login']);
       this.isSubmitting = false 
 
@@ -59,7 +59,6 @@ export class SelectionPage {
     }
 
     if (!resume_data) {
-      console.log("No resume data found");
       this.isSubmitting = false
       return;
     }

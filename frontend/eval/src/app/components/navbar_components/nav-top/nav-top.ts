@@ -1,6 +1,5 @@
 import { Component, inject } from '@angular/core';
 import { LucideAngularModule, User, Settings, LogOut, Menu,  } from 'lucide-angular';
-import { SignupService } from '../../../services/signup_service/signup-service';
 import { Router } from '@angular/router';
 import { Auth } from '../../../services/auth';
 @Component({
@@ -11,7 +10,6 @@ import { Auth } from '../../../services/auth';
   styleUrls: ['./nav-top.scss'],
 })
 export class NavTop {
-  private signupService = inject(SignupService)
   private authService = inject(Auth)
   
   private router = inject(Router)

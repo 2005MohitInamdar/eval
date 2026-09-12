@@ -1,7 +1,6 @@
 import { Component,inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
-import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Auth } from '../../services/auth';
@@ -34,8 +33,8 @@ export class InterviewDetails {
   interview_role = new FormControl("", [Validators.required]);
   intensity_level = new FormControl("", [Validators.required]);
   
-  isSubmitting = false      // <-- new
-  errorMessage = ""         // <-- new
+  isSubmitting = false      
+  errorMessage = ""         
   
   interviewType(value:string){
     this.interview_type = value 
@@ -43,7 +42,7 @@ export class InterviewDetails {
 
   async start_interview(){
     console.log("interview component navigated!")
-    if (this.isSubmitting) return   // <-- new: guard double-submit
+    if (this.isSubmitting) return  
 
     try {
       await this.authService.checkAuthStatus();
@@ -58,8 +57,8 @@ export class InterviewDetails {
       this.intensity_level.markAsTouched();
       return;
     }
-    this.errorMessage = ""     // <-- new: clear any previous error
-    this.isSubmitting = true   // <-- new
+    this.errorMessage = ""     
+    this.isSubmitting = true   
 
     const payload = {
       "interview_type" : this.interview_type,
@@ -84,11 +83,11 @@ export class InterviewDetails {
         this.cdr.detectChanges()
       },
       error: (err) => {
-        console.log(err); // keep this for full debugging detail in the console
+        console.log(err); 
         const message = err.error?.detail || err.message || "An unexpected error occurred";
         console.log("error message: " , message);
-        this.errorMessage = message   // <-- new: surface it to the user
-        this.isSubmitting = false     // <-- new: allow retry
+        this.errorMessage = message
+        this.isSubmitting = false  
       }
     })
   }

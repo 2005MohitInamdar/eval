@@ -15,10 +15,6 @@ export class AuthUiWrapper implements OnInit {
   private platformID = inject(PLATFORM_ID)
   current_page!:string | null
 
-  
-  constructor(private fb:FormBuilder){
-  }
-
   ngOnInit(): void{
     this.authService.initForm()
     this.authService.handleNameController()

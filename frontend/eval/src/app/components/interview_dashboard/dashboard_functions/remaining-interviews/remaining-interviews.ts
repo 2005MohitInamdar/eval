@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 interface RemainingInterview {
   role: string;
   type: string;
-  progress: number;     // 0-100, how far through the interview they got
+  progress: number;
   questionsLeft: number;
   startedOn: string;
 }
@@ -21,7 +21,6 @@ export class RemainingInterviews {
   
   searchQuery = '';
  
-  // ---- Placeholder data — swap with real API data later ----
   interviews: RemainingInterview[] = [
     { role: 'Backend Development', type: 'Technical', progress: 60, questionsLeft: 3, startedOn: 'Sep 10, 2026' },
     { role: 'AI Engineer', type: 'Combined', progress: 30, questionsLeft: 6, startedOn: 'Sep 9, 2026' },
@@ -39,6 +38,3 @@ export class RemainingInterviews {
     );
   }
 }
-
-
-

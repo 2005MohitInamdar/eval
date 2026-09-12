@@ -1,6 +1,6 @@
 import { Component, OnInit, PLATFORM_ID, inject, ChangeDetectorRef } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms'; 
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms'; 
 import { Router } from '@angular/router';
 import { Supabase } from '../../../../services/supabase/supabase';
 
@@ -20,20 +20,20 @@ export interface EducationEntry {
 
 export interface ResumeEntries {
   id: string;
-  name: string;             // Changed from full_name to match "name" in JSON
+  name: string;             
   email: string;
   phone: string;
   location: string;
   soft_skills: string[];
   technical_skills: string[];
-  experience: ExperienceEntry[]; // Strongly typed instead of any[]
-  projects: string[];           // Array of strings based on your JSON structure
-  education: EducationEntry[];   // Strongly typed instead of any[]
+  experience: ExperienceEntry[]; 
+  projects: string[];           
+  education: EducationEntry[];  
   linkedin_url: string | null;
   github_url: string | null;
   portfolio_url: string | null;
-  selected_company: string;     // Added from JSON
-  desired_role: string;         // Added from JSON
+  selected_company: string;     
+  desired_role: string;         
 }
 
 
@@ -76,7 +76,6 @@ export class Resume implements OnInit{
   }
 
   update_resume(){
-    // this.router.navigate(['/ui_wrapper/UpdateRes'])
     this.router.navigate(['/uploadResume'])
   }
 }
